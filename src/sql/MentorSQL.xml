@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+<typeAlias alias="mentor" type="Mentor.MTor_VO" />
+<typeAlias alias="zipcode" type="Zipcode.Zipcode_VO" />
+
+<!-- resultMap 정의 -->
+<resultMap id="mentorRes" class="mentor">
+	<result property="mentor_no" column="mentor_no" />
+	<result property="mentor_intro" column="mentor_intro" />
+	<result property="member_no" column="member_no" />
+	<result property="mentor_etc" column="mentor_etc" />
+	<result property="mentor_image" column="mentor_image" />
+	<result property="mentor_university" column="mentor_university" />
+	<result property="mentor_carrer" column="mentor_carrer" />
+	<result property="mentor_job" column="mentor_job" />
+	<result property="mentor_imagesav" column="mentor_imagesav" />
+	<result property="mentor_passwd" column="mentor_passwd" />
+	
+</resultMap>
+
+	<resultMap id="zipcodeRes" class="zipcode">
+		<result property="area1" column="area1"/>
+		<result property="area2" column="area2"/>
+	</resultMap>
+
+
+
+<!-- 공통으로 사용할 select-all 절 정의 -->
+
+
+<sql id="select-list">
+	select  mb.member_name, mt.mentor_job, mt.mentor_intro, mt.mentor_no, mt.mentor_imagesav, mb.member_index
+</sql>
+
+	<sql id="select-view">
+		select mb.member_name, mb.member_email, mt.mentor_intro, mt.mentor_carrer, mt.mentor_job, mt.mentor_university,
+		mt.mentor_etc, mt.mentor_imagesav, mt.mentor_no, mt.mentor_passwd, mb.member_index
+	</sql>
+
+<!-- 공통으로 사용할 where-no 절 정의 -->
+<sql id="where-no">
+	WHERE mentor_no = #mentor_no#
+</sql>
+
+
+<!-- select 쿼리문 정의 -->
+
+<!-- 멘토정보등록 리스트 보기 -->
+<select id="mentorSelectAll" resultClass="mentor" parameterClass="String">
+	<include refid="select-list" />
+	FROM MENTOR mt INNER JOIN MEMBER mb
+	ON mt.member_no = mb.member_no
+	ORDER BY mt.mentor_no DESC
+	
+	
+</select>
+
+<select id="mentorSelectLastNo" resultClass="mentor" parameterClass="int">
+		SELECT max(mentor_no) as mentor_no FROM mentor
+</select>
+
+<select id="mentorSelectOne" resultClass="mentor" parameterClass="int">
+		select *
+		from mentor mt inner join member mb
+		on mt.member_no = mb.member_no
+		<include refid="where-no" />
+		
+</select>
+
+<!--  현재 글의 비밀번호 가져오기. -->
+<select id="mentorSelectPasswd" resultMap="mentorRes">
+		select * from mentor
+		<include refid="where-no" />
+		AND mentor_passwd = #mentor_passwd#
+</select>
+	<!-- 시 , 구 가져오기 -->
+	
+	<select id="mentorZipcodeSelect" resultMap="zipcodeRes">
+		SELECT DISTINCT AREA1, AREA2 FROM ZIPCODE WHERE AREA1 LIKE #AREA1#
+	</select>
+	
+	<!-- 스케줄 맞게 가져오기 -->
+	<select id="mentorSchedule" resultClass="mentor" parameterClass="java.util.Map">
+	select distinct mb.member_name, mt.mentor_job, mt.mentor_intro, mt.mentor_no
+	from schedule s, mentor mt, member mb
+	where s.mentor_no=mt.mentor_no and mt.member_no = mb.member_no 
+	and schedule_addr1=#schedule_addr1# and schedule_addr2 =#schedule_addr2#
+	</select>
+	
+	<select id="mentorexist" resultClass="java.lang.String" parameterClass="mentor">
+		select mentor_no
+		from mentor
+		where member_no = #member_no#
+	</select>
+	
+
+	<!-- insert 쿼리문 정의 -->
+	<insert id="mentorInsert" parameterClass="mentor">
+	INSERT INTO MENTOR (MENTOR_NO,
+							MEMBER_NO,
+							MENTOR_INTRO,
+							MENTOR_ETC,
+							MENTOR_IMAGE,
+							MENTOR_IMAGESAV,
+							MENTOR_UNIVERSITY,
+							MENTOR_CARRER,
+							MENTOR_PASSWD,
+							MENTOR_JOB
+							)
+					VALUES (MENTOR_NO_SEQ.NEXTVAL,
+							#member_no#,
+							#mentor_intro#,
+							#mentor_etc#,
+							#mentor_image#,
+							#mentor_imagesav#,
+							#mentor_university#,
+							#mentor_carrer#,
+							#mentor_passwd#,
+							#mentor_job#
+							)
+	</insert>
+
+	
+	<update id="mentorUpdateFile" parameterClass="mentor">
+		UPDATE mentor SET mentor_image=#mentor_image#
+						  ,mentor_imagesav=#mentor_imagesav#
+	<include refid="where-no"/>
+	</update>
+	
+	<update id="updateMentor" parameterClass="mentor">
+	UPDATE MENTOR SET mentor_intro = 	#mentor_intro#, 
+					mentor_job = #mentor_job#,
+					mentor_carrer = #mentor_carrer#,
+					mentor_university = #mentor_university#,
+					mentor_etc=#mentor_etc#,
+					mentor_passwd=#mentor_passwd#
+	<include refid = "where-no" />
+	</update>
+	
+	<!-- delete 쿼리문 정의 -->
+
+	<delete id="mentorDelete" parameterClass="mentor">
+		DELETE FROM mentor
+		<include refid="where-no"/>
+	</delete>
+	
+
+</sqlMap>

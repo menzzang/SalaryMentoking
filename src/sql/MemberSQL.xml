@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+	'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+	
+<sqlMap>
+	<typeAlias alias="member" type="Member.Mem_VO" />
+	<typeAlias alias="zipcode" type="Zipcode.Zipcode_VO" />
+	
+	
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="memberRes" class="member" >
+		<result property="member_no" column="MEMBER_NO" />
+		<result property="member_id" column="MEMBER_ID" />
+		<result property="member_passwd" column="MEMBER_PASSWD" />
+		<result property="member_name" column="MEMBER_NAME" />
+		<result property="member_email" column="MEMBER_EMAIL" />
+		<result property="member_phone" column="MEMBER_PHONE" />
+		<result property="member_index" column="MEMBER_INDEX" />
+		<result property="member_zipcode" column="MEMBER_ZIPCODE" />
+		<result property="member_address" column="MEMBER_ADDRESS" />
+		<result property="member_sex" column="MEMBER_SEX"/>
+		<result property="member_birthdate" column="MEMBER_BIRTHDATE"/>
+	</resultMap>
+
+	<resultMap id="zipcodeRes" class="zipcode">
+		<result property="zipcode" column="zipcode"/>
+		<result property="area1" column="area1"/>
+		<result property="area2" column="area2"/>
+		<result property="area3" column="area3"/>
+		<result property="area4" column="area4"/>
+	</resultMap>
+	
+	<!-- 공통으로 사용할 select절 정의 -->
+	<sql id="select-all-member">
+		SELECT * FROM MEMBER
+	</sql>
+	
+	<!-- 공통으로 사용할 where절 정의 -->
+	<sql id="where-no-member">
+		WHERE member_no = #member_no#
+	</sql>
+	
+	
+	<!-- select 쿼리문 정의 -->
+	
+	<select id="memberSelectAll" resultMap="memberRes" parameterClass="Member.Mem_VO">
+		<include refid="select-all-member" />
+		ORDER BY member_no DESC
+	</select>
+	
+	<select id="memberSelectOne" resultMap="memberRes" parameterClass="Member.Mem_VO">
+		<include refid="select-all-member" />
+		<include refid="where-no-member" />
+	</select>
+	
+	<select id="sameMemberChk" resultMap="memberRes">
+		<include refid="select-all-member"/>
+		where member_name = #member_name# and member_phone = #member_phone#
+	</select>
+	
+	<select id="memberSelectPassword" resultMap="memberRes">
+		<include refid="select-all-member" />
+		<include refid="where-no-member" />
+		AND MEMBER_PASSWD = #member_passwd#
+	</select>
+	
+	<!-- 주소 찾기 -->
+	<select id="zipcodeSelect" resultMap="zipcodeRes">
+		SELECT * FROM ZIPCODE WHERE AREA3 LIKE #AREA3#
+	</select>
+	
+	<!-- 로그인시 : 아이디 중복 확인 -->
+	<select id="memberIdCheck" resultClass="member" >
+		select * from member where member_id = #member_id#
+	</select>
+	
+	<!-- 회원가입 : 아이디 중복 확인 -->
+	<select id="memberIdCheck2" resultClass="member" >
+		select member_id from member where member_id = #member_id#
+	</select>
+	
+	<!-- 로그인 체크 -->
+	<select id="loginCheck" resultClass="member" parameterClass="member">
+		select * from member
+		where member_id = #member_id# and member_passwd=#member_passwd#
+	</select>
+	
+		
+	<!--아이디 찾기 -->
+	<select id="findId" resultMap="memberRes">
+		select * from member where member_name = #member_name# and member_phone = #member_phone#
+	</select>
+	<select id="findPassword" resultClass="member">
+		select * from member where member_id = #member_id# and member_name = #member_name# and member_phone = #member_phone#
+	</select>
+	
+	
+	<!-- 
+	<select id="adminIndex" parameterClass="Member.Mem_VO">
+		SELECT MEMBER_INDEX FROM MEMBER WHERE MEMBER_INDEX='0'
+	</select>
+	
+	<select id="mentorIndex" parameterClass="Member.Mem_VO">
+		SELECT MEMBER_INDEX FROM MEMBER WHERE MEMBER_INDEX='1'
+	</select>
+	
+	<select id="menteeIndex" parameterClass="Member.Mem_VO">
+		SELECT MEMBER_INDEX FROM MEMBER WHERE MEMBER_INDEX='2'
+	</select>
+	 -->
+	<!-- insert 쿼리문 정의 -->
+	
+	<select id="memberNoForMTor" resultClass="member">
+		SELECT max(member_no) as member_no FROM member
+	</select>
+	
+	<insert id="insertMember" parameterClass="member">
+		INSERT INTO MEMBER(
+		MEMBER_NO,
+		MEMBER_ID,
+		MEMBER_PASSWD,
+		MEMBER_NAME,
+		MEMBER_EMAIL,
+		MEMBER_PHONE,
+		MEMBER_INDEX,
+		MEMBER_ZIPCODE,
+		MEMBER_ADDRESS,
+		MEMBER_SEX,
+		MEMBER_BIRTHDATE
+		
+		)
+		
+		VALUES(
+		MEMBER_NO_SEQ.NEXTVAL,
+		#member_id#,
+		#member_passwd#,
+		#member_name#,
+		#member_email#,
+		#member_phone#,
+		#member_index#,
+		#member_zipcode#,
+		#member_address#,
+		#member_sex#,
+		#member_birthdate#
+		)
+	</insert>
+	
+	
+	<!-- update 쿼리문 정의 -->
+	<update id="updateMember" parameterClass="member">
+		UPDATE MEMBER SET MEMBER_PASSWD=#member_passwd#,
+						  MEMBER_NAME=#member_name#,
+						  MEMBER_SEX=#member_sex#,
+						  MEMBER_EMAIL=#member_email#,
+						  MEMBER_BIRTHDATE = #member_birthdate#,
+						  MEMBER_PHONE=#member_phone#,
+						  MEMBER_ZIPCODE=#member_zipcode#,
+						  MEMBER_ADDRESS=#member_address#
+		
+		WHERE MEMBER_ID = #member_id#
+	</update>
+	
+	<!-- 비밀번호 초기화 -->
+	<update id="setPassword1111" parameterClass="String">
+		update member set member_passwd = '1111' where member_id = #member_id#
+	</update>
+	
+	<!-- delete 쿼리문 정의 -->
+	<delete id="deleteMember" parameterClass="Member.Mem_VO">
+		DELETE FROM MEMBER
+		<include refid="where-no-member" />
+	</delete>
+
+	
+</sqlMap>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+
+<sqlMap>
+<typeAlias alias="userguide" type="UserGuide.UG_VO" />
+
+<!-- resultMap 설정 -->
+<resultMap id="userguideRes" class="userguide">
+	<result property="userguide_no" column="userguide_no" />
+	<result property="userguide_content" column="userguide_content" />
+	<result property="userguide_fileorg" column="userguide_fileorg" />
+	<result property="userguide_filesav" column="userguide_filesav" />
+	<result property="userguide_regdate" column="userguide_regdate" />
+	<result property="userguide_passwd" column="userguide_passwd" />
+</resultMap>
+
+	<!-- select 쿼리문 정의 -->
+	<!-- 유저가이드 상세보기 -->
+	<sql id="select-all-Ug">
+		SELECT * FROM USERGUIDE
+	</sql>
+
+	<!-- 공통으로 사용할 where절 정의 -->
+	<sql id="where-no-Ug">
+		WHERE userguide_no = #userguide_no#
+	</sql>
+	
+		<select id="userguideSelectAll" resultMap="userguideRes">
+		<include refid="select-all-Ug" />
+		ORDER BY userguide_no DESC
+	</select>
+	
+	<select id="userguideSelectOne" resultClass="userguide">
+	<include refid="select-all-Ug" />
+	where userguide_no = (SELECT max(userguide_no) as userguide_no FROM userguide)
+	</select>
+
+	<select id="userguideSelectLastNo" resultClass="userguide" parameterClass="int">
+		SELECT max(userguide_no) as userguide_no FROM USERGUIDE
+	</select>
+	<!--  현재 글의 비밀번호 가져오기. -->
+	<select id="userguideselectPasswd" resultMap="userguideRes">
+		<include refid="select-all-Ug"/>
+		<include refid="where-no-Ug" />
+		AND userguide_passwd = #userguide_passwd#
+	</select>
+	
+<!-- insert 쿼리문 정의 -->
+<insert id="userguideInsert" parameterClass="userguide">
+	INSERT INTO USERGUIDE(USERGUIDE_NO,
+	USERGUIDE_CONTENT,
+						USERGUIDE_FILEORG,
+						USERGUIDE_FILESAV,
+						USERGUIDE_REGDATE,
+						USERGUIDE_PASSWD)
+     VALUES(USERGUIDE_NO_SEQ.NEXTVAL,	#userguide_content#,
+						#userguide_fileorg#,
+						#userguide_filesav#,
+						#userguide_regdate#,
+						#userguide_passwd#)
+</insert>
+
+<!-- update 쿼리문 정의 -->
+<update id="userguideUpdate" parameterClass="userguide">
+	UPDATE USERGUIDE SET USERGUIDE_CONTENT = #userguide_content#,
+						USERGUIDE_FILEORG = #userguide_fileorg#,
+						USERGUIDE_FILESAV = #userguide_filesav#,
+						USERGUIDE_PASSWD = #userguide_passwd#
+	<include refid="where-no-Ug" />
+</update>
+
+	<update id="userguideUpdateFile" parameterClass="userguide">
+		UPDATE USERGUIDE SET USERGUIDE_FILEORG=#userguide_fileorg#
+						  ,USERGUIDE_FILESAV=#userguide_filesav#
+	<include refid="where-no-Ug"/>
+	</update>
+
+<!-- delete 쿼리문 정의 -->
+<delete id="userguideDelete" parameterClass="userguide">
+	DELETE FROM USERGUIDE
+		<include refid="where-no-Ug" />
+</delete>
+
+</sqlMap>

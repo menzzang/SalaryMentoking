@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+	'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+	
+	
+<sqlMap>
+	<typeAlias alias="ccomment" type="CComment.CC_VO" />
+	<typeAlias alias="member" type="Member.Mem_VO" />
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="ccommentRes" class="ccomment">
+		<result property="ccomment_no" column="ccomment_no"/>
+		<result property="ccomment_passwd" column="ccomment_passwd"/>
+		<result property="ccomment_content" column="ccomment_content"/>
+		<result property="ccomment_regdate" column="ccomment_regdate"/>
+		<result property="member_no" column="member_no"/>
+		<result property="cboard_no" column="cboard_no"/>
+	</resultMap>
+	
+		<!-- 리절트 맵 정의 -->
+	<resultMap id="memberRes" class="member" >
+		<result property="member_no" column="MEMBER_NO" />
+		<result property="member_id" column="MEMBER_ID" />
+		<result property="member_passwd" column="MEMBER_PASSWD" />
+		<result property="member_name" column="MEMBER_NAME" />
+		<result property="member_email" column="MEMBER_EMAIL" />
+		<result property="member_phone" column="MEMBER_PHONE" />
+		<result property="member_index" column="MEMBER_INDEX" />
+		<result property="member_zipcode" column="MEMBER_ZIPCODE" />
+		<result property="member_address" column="MEMBER_ADDRESS" />
+		<result property="member_sex" column="MEMBER_SEX"/>
+		<result property="member_birthdate" column="MEMBER_BIRTHDATE"/>
+	</resultMap>
+	<sql id="select-Ccomment">
+		select cc.ccomment_no, cc.ccomment_passwd, cc.ccomment_content cc.ccomment_regdate, m.member_no, cb.cboard_no
+		from ccomment rc, member m, cboard cb
+		where m.member_no=cc.member_no and cc.cboard_no=cb.cboard_no
+	</sql>
+	
+	<!-- 공통으로 사용할 select절 정의 -->
+	<sql id="select-all-CComment">
+		SELECT * FROM CCOMMENT
+	</sql>
+	
+	<!-- 공통으로 사용할 where-no-CComment절 정의 -->
+	<sql id="where-no-CComment">
+		WHERE ccomment_no = #ccomment_no#
+	</sql>
+	
+	
+	<!-- select 쿼리문 정의 -->
+	
+   <select id="ccommentSelectAll" resultClass="ccomment">
+		select  cc.ccomment_no, mb.member_id, cc.ccomment_regdate, cc.ccomment_content, cc.member_no
+		from ccomment cc, cboard cb, member mb
+		where cc.cboard_no=cb.cboard_no and cc.member_no=mb.member_no and  cb.cboard_no = #cboard_no#
+   </select>
+	
+	<select id="ccommentSelectOne" resultMap="ccommentRes" parameterClass="int">
+		<include refid="select-all-CComment" />
+		<include refid="where-no-CComment" />
+	</select>
+	
+	<select id="ccommentselectPasswd" resultClass="ccomment">
+		<include refid="select-all-CComment"/>
+		<include refid="where-no-CComment" />
+		AND ccomment_passwd = #ccomment_passwd#
+	</select>
+	
+	 <select id="ccommentSelectNo" resultMap="ccommentRes" parameterClass="int">
+		select cc.ccomment_content from ccomment cc, member m where cc.member_no=m.member_no
+	</select>
+	<select id="ccommentSelectLastNo" resultClass="ccomment" parameterClass="int">
+		SELECT max(ccomment_no) as ccomment_no FROM ccomment
+	</select>
+	
+	<!-- insert 쿼리문 정의 -->
+	
+	<insert id="ccommentInsert" parameterClass="ccomment">
+		INSERT INTO CCOMMENT(
+		CCOMMENT_NO,
+		CCOMMENT_PASSWD,
+		CCOMMENT_CONTENT,
+		CCOMMENT_REGDATE,
+		member_no,
+		cboard_no
+		)
+		
+		VALUES(
+		CCOMMENT_NO_SEQ.NEXTVAL,
+		#ccomment_passwd#,
+		#ccomment_content#,
+		#ccomment_regdate#,
+		#member_no#,
+		#cboard_no#
+		)
+	</insert>
+	
+	<!-- delete 쿼리문 정의 -->
+	<delete id="ccommentDelete" parameterClass="ccomment">
+		DELETE FROM CCOMMENT
+		<include refid="where-no-CComment"/>
+	</delete>
+</sqlMap>

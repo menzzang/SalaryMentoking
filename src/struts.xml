@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+	<constant name="struts.multipart.maxSize" value="104857600"/>
+	<package name="Mentoring" extends="struts-default, tiles-default">
+	
+		<!-- ##Main -->
+		<action name="MainAction" class="Main.MainAction">
+			<result type="tiles">MainAction</result>
+		</action> 
+		
+				<!--##MEMER.XML -->
+		<!-- 이용약관 폼 -->
+		<action name="Mem_SelectForm" class="Member.Mem_SelectAction" method="form">
+			<result type="tiles">Mem_SelectAction</result>
+		</action>
+
+		<action name="Mem_SelectAction" class="Member.Mem_SelectAction">
+			<result type="chain">Mem_JoinForm</result>
+		</action>
+		
+		<!-- 회원가입폼 -->
+		<action name="Mem_JoinForm" class="Member.Mem_JoinAction" method="form">
+			<result type="tiles">Mem_JoinAction</result>
+		</action>
+		
+		<!-- 아이디 중복 체크 -->
+		<action name="Mem_IdCheckAction" class="Member.Mem_IdChkAction">
+			<result>/Member/MemberIdCheck.jsp</result>
+		</action>
+		
+		<!-- 가입 후 메인 이동 -->
+		<action name="Mem_JoinAction" class="Member.Mem_JoinAction">
+			<result name="error">/Member/sameIdError.jsp</result>
+			<result name="input">/Member/sameMemberChk.jsp</result>
+			<result type="redirect-action">
+				<param name="actionName">MainAction</param>
+			</result>
+		</action>
+		
+			<!-- 아이디 비밀번호 찾기  -->
+		<action name="Mem_FindForm" class="Member.Mem_FindAction" method="form">
+			<result type="tiles">Mem_Find</result>
+		</action>
+		
+		<action name="Mem_FindAction" class="Member.Mem_FindAction">
+			<result type="tiles">Mem_FindAction</result>
+		</action>
+		<action name="Mem_FindPassword" class="Member.Mem_FindAction" method="findPassword">
+			<result type="tiles">Mem_FindAction2</result>
+		</action>
+		
+		<!-- 멘토정보 등록 -->
+		<action name="MTor_ListAction" class="Mentor.MTor_ListAction" >
+			<result type="tiles">Mtor_ListAction</result>
+		</action>
+		
+		<action name="MTor_JoinAction" class="Member.Mem_JoinAction">
+			<result name="error">/Member/sameIdError.jsp</result>
+			<result name="input">/Member/sameMemberChk.jsp</result>
+			<result type="chain">MTor_WriteForm</result>
+		</action>
+		
+		<action name="MTor_WriteForm" class="Mentor.MTor_WriteAction" method="form" >
+			<result type="tiles">Mtor_WriteForm</result>
+		</action>
+		
+		<action name="MTor_WriteAction" class="Mentor.MTor_WriteAction" >
+			<result type="redirect-action">
+				<param name="actionName">MTor_ListAction</param>
+			</result>
+		</action>		
+		
+		<action name="MTor_ViewAction" class="Mentor.MTor_ViewAction" >
+			<result type="tiles">Mtor_ViewAction</result>
+		</action>
+		<action name="MTor_ViewAction123" class="Mentor.MTor_ViewAction" method="Rlist_mento_no">
+			<result type="tiles">MTor_ViewAction1</result>
+		</action>
+		
+		<!-- 비밀번호 체크 액션. -->
+		<action name="MTor_CheckForm" class="Mentor.MTor_ViewAction" method="checkForm">
+			<result>/Mentor/checkPassword.jsp</result>
+		</action>
+		
+		<action name="MTor_CheckAction" class="Mentor.MTor_ViewAction" method="checkAction">
+			<result name="error">/Mentor/checkError.jsp</result>
+			<result type="tiles">MTor_CheckAction</result>
+		</action>
+		
+		<action name="MTor_ModifyForm" class="Mentor.MTor_ViewAction" >
+			<result type="chain">MTor_WriteForm</result>
+		</action>
+		
+		<action name="MTor_ModifyAction" class="Mentor.MTor_ModifyAction" >
+			<result type="chain">MTor_ViewAction</result>
+		</action>
+		
+		<action name="MTor_DeleteAction" class="Mentor.MTor_DeleteAction" >
+			<result type="chain">MTor_ListAction</result>
+		</action>
+		
+		<action name="ZipCheckAction1" class="Zipcode.Zipcode_Action1">
+			<result>/Zipcode/zipChk1.jsp</result>
+		</action>
+		
+		<action name="MTor_Schedule1" class="Mentor.MTor_ListAction" method="schedule">
+			<result type="chain">MTor_Schedule</result>
+		</action>
+		
+		<action name="MTor_Schedule" class="Mentor.MTor_ListAction" method="form">
+			<result type="tiles">Mtor_ListAction</result>
+		</action>
+		
+			<!-- ##로그인 -->
+		<!-- 로그인 폼 -->
+		<action name="LoginForm" class="Member.Mem_LoginAction" method="form">
+			<result type="tiles">LoginForm</result>
+		</action>
+
+		<!-- 로그인 액션 -->
+		<action name="LoginAction" class="Member.Mem_LoginAction">
+			<result type="redirect-action">
+				<param name="actionName">MainAction</param>
+			</result>
+			<result name="error">/Check/checkError.jsp</result>
+		</action>
+		
+		<!-- 로그아웃 액션 -->
+		<action name="LogoutAction" class="Member.Mem_LoginAction" method="logout">
+			<result type="redirect-action">
+				<param name="actionName">MainAction</param>
+			</result>
+			<result name="error">/Check/checkError.jsp</result>
+		</action>
+		
+		<!-- ##우편번호-->
+		<action name="ZipCheckAction" class="Zipcode.Zipcode_Action">
+			<result>/Zipcode/zipChk.jsp</result>
+		</action>
+		
+		<!-- ## MYPAGE ## -->
+		<!-- 마이페이지 : 메인 -->
+		<action name="MP_Mypage" class="Mypage.MP_MypageAction">
+			<result type="tiles">MP_Mypage</result>
+		</action>
+		
+		<!-- 마이페이지 : 개인정보수정 -->
+		<action name="MP_ModifyForm" class="Member.Mem_ModifyAction" method="form" >
+			<result type="tiles">Mem_Action</result>
+		</action>
+		
+		<action name="MP_ModifyAction" class="Member.Mem_ModifyAction">
+			<result type="redirect-action">
+				<param name="actionName">MP_Mypage</param>
+			</result>
+		</action>
+		
+		<action name="MP_MTorGetNo" class="Mypage.MP_MypageAction" method="mentorGetNo">
+			<result type="tiles">Mtor_ViewAction</result>
+			<result name="error" type="tiles">MP_Mypage</result>
+		</action>
+		
+		<!-- 마이페이지 : 회원탈퇴 -->
+		<action name="Mem_DeleteForm" class="Member.Mem_DeleteAction" method="form">
+			<result type="tiles">Mem_DeleteForm</result>
+		</action>
+		
+		<action name="Mem_DeleteAction" class="Member.Mem_DeleteAction" >
+			<result name="error" type="chain">
+				<param name="actionName">Mem_DeleteForm</param>
+			</result>
+			<result type="tiles">Mem_DeleteAction</result>
+		</action>
+		
+		<!-- 마이페이지 : 내가 쓴 글 보기 -->
+		<action name="MP_MyList" class="Mypage.MP_MyList">
+			<result type="tiles">MP_MyList</result>
+		</action>
+		
+		<!-- 마이페이지 : 내가 쓴 댓글 보기 -->
+		<action name="MP_MyList2" class="Mypage.MP_MyList" method="execute2">
+			<result type="tiles">MP_MyList2</result>
+		</action>
+		
+		<!-- 마이페이지 : 멘토링 신청현황 -->
+		<action name="MP_Apply" class="Apply.AP_ListAction">
+			<result type="tiles">MP_Apply</result>
+		</action>
+		
+		
+		
+		<!-- ##RBOARD.XML -->
+		<action name="RB_ListAction" class="RBoard.RB_ListAction" >
+			<result type="tiles">RB_ListAction</result>
+		</action>	
+		
+		<action name="RB_searchAction" class="RBoard.RB_ListAction" method="search">
+			<result type="chain">RB_ListAction</result>
+		</action>
+			
+		<action name="RB_WriteForm" class="RBoard.RB_WriteAction" method="form" >
+			<result type="tiles">RB_WriteForm</result>
+		</action>	
+		
+		<action name="RB_WriteAction" class="RBoard.RB_WriteAction" >
+			<result type="chain">RB_ListAction</result>
+		</action>
+		
+		<action name="RB_ViewAction" class="RBoard.RB_ViewAction" >
+			<result type="tiles">RB_ViewAction</result>
+		</action>
+		
+		<action name="fileDownloadAction" class="RBoard.RB_ViewAction" method="download">
+    		<result name="success" type="stream">
+                <param name="contentType">binary/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">${contentDisposition}</param>
+                <param name="contentLength">${contentLength}</param> 
+                <param name="bufferSize">4096</param>
+         	</result>
+		</action>
+		
+		<action name="RB_ModifyForm" class="RBoard.RB_ViewAction" >
+			<result type="chain">RB_WriteForm</result>
+		</action>
+		
+		<action name="RB_ModifyAction" class="RBoard.RB_ModifyAction" >
+			<result type="chain">RB_ViewAction</result>
+		</action>
+		<!-- 수정한 값을 가지고 가야 하므로 chain을 씀 -->
+		
+		<!-- 비밀번호 체크 액션. -->
+		<action name="RB_CheckForm" class="RBoard.RB_ViewAction" method="checkForm">
+			<result>/RBoard/checkPassword.jsp</result>
+		</action>
+		
+		<action name="RB_CheckAction" class="RBoard.RB_ViewAction" method="checkAction">
+			<result name="error">/Check/checkError.jsp</result>
+			<result type="tiles">RB_CheckAction</result>
+		</action>
+		
+		<action name="RB_DeleteAction" class="RBoard.RB_DeleteAction" >
+			<result type="chain">RB_ListAction</result>
+		</action>
+		
+		<!-- ##RCOMMENT.XML -->
+		<action name="RC_WriteAction" class="RComment.RC_WriteAction">
+			<result type="chain">RB_ViewAction</result>
+		</action>
+		
+		<action name="RC_CheckForm" class="RBoard.RB_ViewAction" method="checkForm">
+ 			<result>/RBoard/checkCommentPW.jsp</result>
+ 		</action>
+ 	
+ 		<action name="RC_CheckAction" class="RBoard.RB_ViewAction" method="checkAction2">
+ 			<result name="error">/Check/checkError.jsp</result>
+ 			<result>/Check/checkSuccess.jsp</result>
+ 		</action>
+		
+		<action name="RC_DeleteAction" class="RBoard.RB_DeleteAction" method="execute2">
+ 			<result type="chain">RB_ListAction</result>
+ 		</action>
+		
+		
+		<!-- ##NOTICE.XML -->
+		<action name="N_ListAction" class="Notice.N_ListAction" >
+			<result type="tiles">N_ListAction</result>
+		</action>	
+			
+		<action name="N_WriteForm" class="Notice.N_WriteAction" method="form" >
+			<result type="tiles">N_WriteForm</result>
+		</action>	
+		
+		<action name="N_WriteAction" class="Notice.N_WriteAction" >
+			<result type="redirect-action">
+				<param name="actionName">N_ListAction</param>
+			</result>
+		</action>
+		
+		<action name="N_ViewAction" class="Notice.N_ViewAction" >
+			<result type="tiles">N_ViewAction</result>
+		</action>
+		
+		<action name="fileDownloadAction" class="Notice.N_ViewAction" method="download">
+    		<result name="success" type="stream">
+                <param name="contentType">binary/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">${contentDisposition}</param>
+                <param name="contentLength">${contentLength}</param> 
+                <param name="bufferSize">4096</param>
+         	</result>
+		</action>
+		
+		<action name="N_ModifyForm" class="Notice.N_ViewAction" >
+			<result type="chain">N_WriteForm</result>
+		</action>
+		
+		<action name="N_ModifyAction" class="Notice.N_ModifyAction" >
+			<result type="chain">N_ViewAction</result>
+		</action>
+		<!-- 수정한 값을 가지고 가야 하므로 chain을 씀 -->
+		
+		<!-- 비밀번호 체크 액션. -->
+		<action name="N_CheckForm" class="Notice.N_ViewAction" method="checkForm">
+			<result>Notice/checkPassword.jsp</result>
+		</action>
+		
+		<action name="N_CheckAction" class="Notice.N_ViewAction" method="checkAction">
+			<result name="error">/Check/checkError.jsp</result>
+			<result type="tiles">N_CheckAction</result>
+		</action>
+		
+		<!-- 검색 액션 -->
+		<action name="searchAction" class="Notice.N_ListAction" method="search">
+			<result type="chain">N_ListAction</result>
+		</action>
+		
+		<action name="N_DeleteAction" class="Notice.N_DeleteAction" >
+			<result type="chain">N_ListAction</result>
+		</action>
+	
+		<!-- ##IBOARD.XML -->
+		<action name="IB_ListAction" class="IBoard.IB_ListAction" >
+			<result type="tiles">IB_ListAction</result>
+		</action>	
+			
+		<action name="IB_WriteForm" class="IBoard.IB_WriteAction" method="form" >
+			<result type="tiles">IB_WriteForm</result>
+		</action>	
+		
+		<action name="IB_WriteAction" class="IBoard.IB_WriteAction" >
+			<result type="redirect-action">
+				<param name="actionName">IB_ListAction</param>
+			</result>
+		</action>
+		
+		<action name="IB_ViewAction" class="IBoard.IB_ViewAction" >
+			<result type="tiles">IB_ViewAction</result>
+		</action>
+		
+		<action name="fileDownloadAction" class="IBoard.IB_ViewAction" method="download">
+    		<result name="success" type="stream">
+                <param name="contentType">binary/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">${contentDisposition}</param>
+                <param name="contentLength">${contentLength}</param> 
+                <param name="bufferSize">4096</param>
+         	</result>
+		</action>
+		
+		<action name="IB_ModifyForm" class="IBoard.IB_ViewAction" >
+			<result type="chain">IB_WriteForm</result>
+		</action>
+		
+		<action name="IB_ModifyAction" class="IBoard.IB_ModifyAction" >
+			<result type="chain">IB_ViewAction</result>
+		</action>
+		<!-- 수정한 값을 가지고 가야 하므로 chain을 씀 -->
+		
+		<!-- 비밀번호 체크 액션. -->
+		<action name="IB_CheckForm" class="IBoard.IB_ViewAction" method="checkForm">
+			<result>/IBoard/checkPassword.jsp</result>
+		</action>
+		
+		<action name="IB_CheckAction" class="IBoard.IB_ViewAction" method="checkAction">
+			<result name="error">/Check/checkError.jsp</result>
+			<result type="tiles">IB_CheckAction</result>
+		</action>
+		
+		<action name="IB_DeleteAction" class="IBoard.IB_DeleteAction" >
+			<result type="chain">IB_ListAction</result>
+		</action>
+		
+		<!-- ##CBOARD.XML -->
+		<action name="CB_ListAction" class="CBoard.CB_ListAction" >
+			<result type="tiles">CB_ListAction</result>
+		</action>	
+			
+		<action name="CB_WriteForm" class="CBoard.CB_WriteAction" method="form" >
+			<result type="tiles">CB_WriteForm</result>
+		</action>	
+		
+		<action name="CB_WriteAction" class="CBoard.CB_WriteAction" >
+			<result type="redirect-action">
+				<param name="actionName">CB_ListAction</param>
+			</result>
+		</action>
+		
+		<action name="CB_ViewAction" class="CBoard.CB_ViewAction" >
+			<result type="tiles">CB_ViewAction</result>
+		</action>
+		
+		<action name="fileDownloadAction" class="CBoard.CB_ViewAction" method="download">
+    		<result name="success" type="stream">
+                <param name="contentType">binary/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">${contentDisposition}</param>
+                <param name="contentLength">${contentLength}</param> 
+                <param name="bufferSize">4096</param>
+         	</result>
+		</action>
+		
+		<action name="CB_ModifyForm" class="CBoard.CB_ViewAction" >
+			<result type="chain">CB_WriteForm</result>
+		</action>
+		
+		<action name="CB_ModifyAction" class="CBoard.CB_ModifyAction" >
+			<result type="chain">CB_ViewAction</result>
+		</action>
+		<!-- 수정한 값을 가지고 가야 하므로 chain을 씀 -->
+		
+		<!-- 비밀번호 체크 액션. -->
+		<action name="CB_CheckForm" class="CBoard.CB_ViewAction" method="checkForm">
+			<result>/CBoard/checkPassword.jsp</result>
+		</action>
+		
+		<action name="CB_CheckAction" class="CBoard.CB_ViewAction" method="checkAction">
+			<result name="error">/Check/checkError.jsp</result>
+			<result type="tiles">CB_CheckAction</result>
+		</action>
+		
+		<action name="CB_DeleteAction" class="CBoard.CB_DeleteAction" >
+			<result type="chain">CB_ListAction</result>
+		</action>
+		
+		<action name="CC_WriteAction" class="CComment.CC_WriteAction" >
+			<result type="chain">CB_ViewAction</result>
+		</action>
+		
+		<action name="CC_CheckForm" class="CBoard.CB_ViewAction" method="checkForm">
+ 			<result>/CBoard/checkCommentPW.jsp</result>
+ 		</action>
+ 	
+ 		<action name="CC_CheckAction" class="CBoard.CB_ViewAction" method="checkAction2">
+ 			<result name="error">/Check/checkError.jsp</result>
+ 			<result>/Check/checkSuccess.jsp</result>
+ 		</action>
+		
+		<action name="CC_DeleteAction" class="CBoard.CB_DeleteAction" method="execute2">
+ 			<result type="chain">CB_ListAction</result>
+ 		</action>
+
+		
+		<!-- ##유저가이드 -->
+		<action name="UG_ListAction" class="UserGuide.UG_ListAction" >
+			<result type="tiles">UG_ListAction</result>
+		</action>	
+		 
+        <!-- 유저가이드 상세보기-->
+		<action name="UG_ViewAction" class="UserGuide.UG_ViewAction">
+		       <result type="tiles">UG_ViewAction</result>
+		</action>
+		
+		<!-- 유저가이드 쓰기 액션. -->
+     	<action name="UG_WriteForm" class="UserGuide.UG_WriteAction" method="form">
+		 <result type="tiles">UG_WriteForm</result>
+		</action>
+		
+		<action name="UG_WriteAction" class="UserGuide.UG_WriteAction" >
+		 	<result type="redirect-action">
+				<param name="actionName">UG_ListAction</param>
+				</result>
+		</action>
+		
+		<action name="fileDownloadAction" class="UserGuide.UG_ViewAction" method="download">
+    		<result name="success" type="stream">
+                <param name="contentType">binary/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">${contentDisposition}</param>
+                <param name="contentLength">${contentLength}</param> 
+                <param name="bufferSize">4096</param>
+         	</result>
+		</action>
+		
+		<!-- 유저가이드 수정 액션. -->
+		<action name="UG_ModifyForm" class="UserGuide.UG_ViewAction">
+			<result type="chain">UG_WriteForm</result>
+		</action>
+		
+		<action name="UG_ModifyAction" class="UserGuide.UG_ModifyAction">
+			<result type="chain">UG_ViewAction</result>
+		</action>
+		 
+		 <action name="UG_CheckForm" class="UserGuide.UG_ViewAction" method="checkForm">
+			<result>/UserGuide/checkPassword.jsp</result>
+		</action>
+		
+		<action name="UG_CheckAction" class="UserGuide.UG_ViewAction" method="checkAction">
+			<result name="error">/Check/checkError.jsp</result>
+			<result type="tiles">UG_CheckAction</result>
+		</action>
+		 
+		<!-- 유저가이드 삭제 액션. -->
+		<action name="UG_DeleteAction" class="UserGuide.UG_DeleteAction">
+			<result type="chain">UG_ListAction</result>
+		</action>
+		
+		<!-- ##스케줄 -->
+		<action name="S_ListAction" class="Schedule.S_ListAction" >
+			<result type="tiles">S_ListAction</result>
+		</action>	
+			
+		<action name="S_WriteForm" class="Schedule.S_WriteAction" method="form" >
+			<result type="tiles">S_WriteForm</result>
+		</action>	
+		
+		<action name="S_WriteAction" class="Schedule.S_WriteAction" >
+			<result type="chain">S_ListAction</result>
+			<!-- <result type="redirect-action">
+				<param name="actionName">S_ListAction</param>
+			</result> -->
+		</action>
+		
+		<action name="S_ViewAction" class="Schedule.S_ViewAction" >
+			<result type="tiles">S_ViewAction</result>
+		</action>
+		
+		<action name="S_ModifyForm" class="Schedule.S_ViewAction" >
+			<result type="chain">S_WriteForm</result>
+		</action>
+		
+		<action name="S_ModifyAction" class="Schedule.S_ModifyAction" >
+			<result type="chain">S_ViewAction</result>
+		</action>
+		
+		<action name="CB_ModifyAction" class="CBoard.CB_ModifyAction" >
+			<result type="chain">CB_ViewAction</result>
+		</action>
+
+		<!-- 비밀번호 체크 액션. -->
+		<action name="S_CheckForm" class="Schedule.S_ViewAction" method="checkForm">
+			<result>/Schedule/checkPassword.jsp</result>
+		</action>
+		
+		<action name="S_CheckAction" class="Schedule.S_ViewAction" method="checkAction">
+			<result name="error">/Check/checkError.jsp</result>
+			<result type="tiles">S_CheckAction</result>
+		</action>
+		
+		<action name="S_DeleteAction" class="Schedule.S_DeleteAction" >
+			<result type="chain">S_ListAction</result>
+		</action>
+		
+		<!-- 우편번호 검색 -->
+		<action name="S_ZipCheckAction" class="Zipcode.Zipcode_Action">
+			<result>/Zipcode/zipChk2.jsp</result>
+		</action>
+		
+		
+				<!-- ##신청 -->
+		<action name="AP_WriteForm" class="Apply.AP_WriteAction" method="form">
+			<result type="tiles">AP_WriteAction</result>
+		</action>
+		
+		<action name="AP_WriteAction" class="Apply.AP_WriteAction" >
+			<!-- <result type="redirect-action">
+				<param name="actionName">AP_ViewAction</param>
+			</result> -->
+			<result type="chain">AP_ViewAction</result>
+		</action>
+		
+		<action name="AP_ModifyForm" class="Apply.AP_ModifyAction" method="form">
+			<result type="chain">AP_WriteForm</result>
+		</action>
+		
+		<action name="AP_ModifyAction" class="Apply.AP_ModifyAction" >
+			<result type="chain">AP_ViewAction</result>
+		</action>
+		
+		<action name="AP_ViewAction" class="Apply.AP_ViewAction" >
+			<result type="tiles">AP_ViewAction</result>
+		</action>
+		
+		<action name="AP_MenteeAction" class="Apply.AP_ListAction" >
+			<result type="tiles">AP_MenteeAction</result>
+		</action>
+		
+		<action name="AP_MentorAction" class="Apply.AP_ListAction" method="execute2">
+			<result type="tiles">AP_MentorAction</result>
+		</action>
+		
+		<action name="AP_CheckForm" class="Apply.AP_ViewAction" method="checkForm">
+			<result>/Apply/checkPassword.jsp</result>
+		</action>
+		
+		<action name="AP_CheckAction" class="Apply.AP_ViewAction" method="checkAction">
+			<result name="error">/Check/checkError.jsp</result>
+			<result type="tiles">AP_CheckAction</result>
+		</action>
+		
+		<action name="AP_DeleteAction" class="Apply.AP_DeleteAction" >
+			<result type="chain">MP_Mypage</result>
+		</action>
+		
+	</package>
+</struts>

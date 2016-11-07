@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+        
+ <tiles-definitions>
+ 
+  	 <!-- 메인페이지 -->	
+   	<definition name="MainAction" template="/common/template/layout.jsp">
+      <put-attribute name="title" value="셀러리맨-토킹" />
+      <put-attribute name="header" value="/common/template/top.jsp" />
+      <put-attribute name="body" value="/Main.jsp" />
+      <put-attribute name="footer" value="/common/template/footer.jsp" />
+   	</definition>
+    
+  <!-- 멘토링 후기 게시판 -->
+	<definition name="RB_ListAction" template="/common/template/layout.jsp">
+      <put-attribute name="title" value="셀러리맨-토킹" />
+      <put-attribute name="header" value="/common/template/top2.jsp" />
+      <put-attribute name="body" value="/RBoard/RBoardList.jsp" />
+      <put-attribute name="footer" value="/common/template/footer.jsp" />
+   	</definition>
+   	
+   	<definition name="RB_SearchAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/RBoard/RBoardList.jsp" />
+   	</definition>
+   	
+   	<definition name="RB_ViewAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/RBoard/RBoardView.jsp" />
+   	</definition>
+   	
+   	<definition name="RB_WriteForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/RBoard/RBoardWrite.jsp" />
+   	</definition>
+   	
+   	<definition name="RB_WriteAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/RBoard/RBoardView.jsp" />
+   	</definition>
+   	
+   	<definition name="RB_ModifyForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/RBoard/RBoardWrite.jsp" />
+   	</definition>
+   	
+   	<definition name="RB_ModifyAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/RBoard/RBoardView.jsp" />
+   	</definition>
+   	
+   	<definition name="RB_DeleteAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/RBoard/RBoardList.jsp" />
+   	</definition>
+   	
+   	<definition name="RB_FileDownloadAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/RBoard/RBoardView.jsp" />
+   	</definition>
+   	
+    <definition name="RB_CheckForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/RBoard/checkpassword.jsp" />
+   </definition>
+   
+    <definition name="RB_CheckAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Check/checkSuccess.jsp" />
+   </definition>
+   
+   
+   <!-- 회원가입 -->
+    <definition name="Mem_SelectAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Member/MemberSelect.jsp" />
+   </definition>
+   
+   <definition name="Mem_JoinAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Member/MemberWrite.jsp" />
+   </definition>
+   
+   <definition name="ZipCheckAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Zipcode/zipChk.jsp" />
+   </definition>
+   
+      <!-- 아이디찾기 -->
+   <definition name="Mem_Find" extends="RB_ListAction">
+   		<put-attribute name="body" value="/Member/MemberFind.jsp"/>
+   </definition>
+   
+   <definition name="Mem_FindAction" extends="RB_ListAction">
+   		<put-attribute name="body" value="/Member/MemberFindResult.jsp"/>
+   </definition>
+   
+   <!-- 비밀번호 찾기 -->
+   <definition name="Mem_FindAction2" extends="RB_ListAction">
+   		<put-attribute name="body" value="/Member/MemberFindPasswordResult.jsp"/>
+   </definition>
+   
+	<!-- 로그인 -->
+	<definition name="LoginForm" extends="RB_ListAction">
+		<put-attribute name="body" value="/Member/login.jsp" />
+	</definition> 
+	
+	<!-- 마이페이지 -->
+	<definition name="MP_Mypage" extends="RB_ListAction">
+		<put-attribute name="body" value="/Mypage/MypageMain.jsp" />
+	</definition>
+	
+	<definition name="MP_MyList" extends="RB_ListAction">
+		<put-attribute name="body" value="/Mypage/MypageMyList.jsp" />
+	</definition>
+	
+	<definition name="MP_MyList2" extends="RB_ListAction">
+		<put-attribute name="body" value="/Mypage/MypageMyList2.jsp" />
+	</definition>
+	
+	<definition name="MP_Apply" extends="RB_ListAction">
+		<put-attribute name="body" value="/Mypage/MypageApply.jsp" />
+	</definition>
+	
+	<!-- 회원탈퇴 -->
+	<definition name="Mem_DeleteForm" extends="RB_ListAction">
+		<put-attribute name="body" value="/Member/MemberDelete.jsp" />
+	</definition>
+	
+	<definition name="Mem_DeleteAction" extends="RB_ListAction">
+		<put-attribute name="body" value="/Member/MemberDeleteResult.jsp" />
+	</definition>
+   
+   
+   
+   <definition name="N_ListAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Notice/NoticeList.jsp" />
+   </definition>	
+   	
+   <definition name="N_ViewAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Notice/NoticeView.jsp" />
+   </definition>
+   
+   <definition name="N_WriteForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/Notice/NoticeWrite.jsp" />
+   </definition>
+
+   <definition name="N_WriteAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Notice/NoticeView.jsp" />
+   </definition>
+   
+   <definition name="N_ModifyForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/Notice/NoticeWrite.jsp" />
+   </definition>
+   
+      <definition name="N_ModifyAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Notice/NoticeView.jsp" />
+   </definition>
+  
+   <definition name="N_DeleteAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Notice/NoticeList.jsp" />
+   </definition>
+   
+   <definition name="N_FileDownload" extends="RB_ListAction">
+      <put-attribute name="body" value="/Notice/NoticeView.jsp" />
+   	</definition>
+   	
+   	<!-- 비밀번호 체크 . -->
+    <definition name="N_CheckForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/Notice/checkPassword.jsp" />
+   </definition>
+   
+    <definition name="N_CheckAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Check/checkSuccess.jsp" />
+   </definition>
+   	
+   	
+   	<!-- 직무게시판 -->
+	 <definition name="IB_ListAction" extends="RB_ListAction">
+      	<put-attribute name="body" value="/IBoard/IBoardList.jsp" />
+     </definition>
+      
+    <definition name="IB_WriteForm" extends="RB_ListAction">
+    	<put-attribute name="body" value="/IBoard/IBoardWrite.jsp" />
+	</definition>
+      
+    <definition name="IB_ViewAction" extends="RB_ListAction">
+      	<put-attribute name="body" value="/IBoard/IBoardView.jsp" />
+	</definition>
+	
+	<definition name="IB_ModifyForm" extends="RB_ListAction">
+      	<put-attribute name="body" value="/IBoard/IBoardWrite.jsp" />
+	</definition>
+	
+	<definition name="IB_CheckForm" extends="RB_ListAction">
+      	<put-attribute name="body" value="/IBoard/checkPassword.jsp" />
+	</definition>
+	
+	<definition name="IB_CheckAction" extends="RB_ListAction">
+      	<put-attribute name="body" value="/Check/checkSuccess.jsp" />
+	</definition>
+   	
+   	<!-- 자유게시판 -->
+   <definition name="CB_ListAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/CBoard/CBoardList.jsp" />
+   </definition>
+   
+
+   <definition name="CB_WriteForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/CBoard/CBoardWrite.jsp" />
+   </definition>
+   
+   <definition name="CB_WriteAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/CBoard/CBoardWrite.jsp" />
+   </definition>
+
+   
+   <definition name="CB_ViewAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/CBoard/CBoardView.jsp" />
+   </definition>
+   
+   <definition name="CB_ModifyForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/CBoard/CBoardWrite.jsp" />
+   </definition>
+   
+   
+     <definition name="CB_ModifyAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/CBoard/CBoardView.jsp" />
+   </definition>
+  
+   
+   <definition name="CB_DeleteAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/CBoard/CBoardView.jsp" />
+   </definition>
+   
+    <definition name="CB_CheckForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/CBoard/checkPassword.jsp" />
+   </definition>
+   
+    <definition name="CB_CheckAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Check/checkSuccess.jsp" />
+   </definition>
+   
+   <!-- 자유게시판 댓글 -->	
+        <definition name="CC_WriteAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/CBoard/CBoardView.jsp" />
+   </definition>
+  
+     <definition name="CC_ModifyAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/CBoard/CBoardView.jsp" />
+   </definition>
+     
+     <definition name="CC_DeleteAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/CBoard/CBoardView.jsp" />
+   </definition>
+   
+      <!--  유저가이드 -->
+   <definition name="UG_ListAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/UserGuide/UserGuideList.jsp" />
+   </definition>
+   
+      <definition name="UG_ViewAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/UserGuide/UserGuideView.jsp" />
+   </definition>
+   
+   
+   <definition name="UG_WriteAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/UserGuide/UserGuideView.jsp" />
+   </definition>
+   
+     <definition name="UG_WriteForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/UserGuide/UserGuideWrite.jsp" />
+   </definition>
+   
+   <definition name="UG_ModifyAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/UserGuide/UserGuideView.jsp" />
+   </definition>
+   
+      
+   <definition name="UG_ModifyForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/UserGuide/UserGuideWrite.jsp" />
+   </definition>
+   
+   <definition name="UG_DeleteAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/UserGuide/UserGuideView.jsp" />
+   </definition>
+   
+    <definition name="UG_CheckForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/UserGuide/checkPassword.jsp" />
+   </definition>
+   
+    <definition name="UG_CheckAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Check/checkSuccess.jsp" />
+   </definition>
+   
+  <definition name="S_ListAction" extends="RB_ListAction">
+      	<put-attribute name="body" value="/Schedule/ScheduleList.jsp" />
+     </definition>
+      
+    <definition name="S_WriteForm" extends="RB_ListAction">
+    	<put-attribute name="body" value="/Schedule/ScheduleWrite.jsp" />
+	</definition>
+      
+    <definition name="S_ViewAction" extends="RB_ListAction">
+      	<put-attribute name="body" value="/Schedule/ScheduleView.jsp" />
+	</definition>
+	
+	<definition name="S_ModifyForm" extends="RB_ListAction">
+      	<put-attribute name="body" value="/Schedule/ScheduleWrite.jsp" />
+	</definition>
+	
+	<definition name="S_CheckForm" extends="RB_ListAction">
+		<put-attribute name="title" value="셀러리맨 토킹" />
+    	<put-attribute name="header" value="/common/template/top.jsp" />
+      	<put-attribute name="body" value="/Schedule/checkPassword.jsp" />
+      	<put-attribute name="footer" value="/common/template/footer.jsp" />
+	</definition>
+	
+	<definition name="S_CheckAction" extends="RB_ListAction">
+      	<put-attribute name="body" value="/Check/checkSuccess.jsp" />
+	</definition>
+	
+	<!-- 신청 -->
+   <definition name="AP_WriteAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Apply/ApplyWrite.jsp" />
+   </definition>
+   
+   <definition name="AP_ModifyAction" extends="RB_ListAction">
+   	<put-attribute name="body" value="/Apply/ApplyWrite.jsp"/>
+   </definition>
+   
+   <definition name="AP_ViewAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Apply/ApplyView.jsp" />
+   </definition>
+    
+   <definition name="AP_MentorAction" extends="RB_ListAction">
+   	      <put-attribute name="body" value="/Apply/MypageApply.jsp"/>
+   </definition>
+   
+    <definition name="AP_MenteeAction" extends="RB_ListAction">
+   	      <put-attribute name="body" value="/Apply/MypageApply.jsp"/>
+   </definition>
+
+  	<definition name="AP_CheckForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/Apply/checkPassword.jsp" />
+   </definition>
+   
+    <definition name="AP_CheckAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Check/checkSuccess.jsp" />
+   </definition>
+   
+  	
+  	
+     <!-- 후기게시판 -->
+  <definition name="MTor_ViewAction1" extends="RB_ListAction">
+      <put-attribute name="body" value="/Rboard/RboardList.jsp" />
+   </definition>
+	
+	<!--  멘토정보등록  -->
+   <definition name="Mtor_DeleteAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Mentor/MentorView.jsp" />
+   </definition>
+   
+   <definition name="Mtor_ListAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Mentor/MentorList.jsp" />
+   </definition>
+   
+   <definition name="Mtor_ModifyAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Mentor/MentorView.jsp" />
+   </definition>
+   
+      <definition name="Mtor_ModifyForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/Mentor/MentorWrite.jsp" />
+   </definition>
+   
+   
+   <definition name="Mtor_ViewAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Mentor/MentorView.jsp" />
+   </definition>
+   
+   <definition name="Mtor_WriteAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Mentor/MentorView.jsp" />
+   </definition>
+   
+     
+   <definition name="Mtor_WriteForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/Mentor/MentorWrite.jsp" />
+   </definition>
+   
+    <definition name="MTor_CheckForm" extends="RB_ListAction">
+      <put-attribute name="body" value="/Mentor/checkPassword.jsp" />
+   </definition>
+   
+    <definition name="MTor_CheckAction" extends="RB_ListAction">
+      <put-attribute name="body" value="/Check/checkSuccess.jsp" />
+   </definition>
+   
+   
+ </tiles-definitions>

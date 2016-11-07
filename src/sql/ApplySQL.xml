@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+	'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+	
+<sqlMap>
+	<typeAlias alias="apply" type="Apply.AP_VO"/>
+	<typeAlias alias="schedule" type="Schedule.S_VO"/>
+	<typeAlias alias="mypage" type="Mypage.MP_VO"/>
+	
+	<resultMap id="applyRes" class="apply">
+		<result property="apply_job" column="apply_job"/>
+		<result property="apply_achievement" column="apply_achievement"/>
+		<result property="apply_content" column="apply_content"/>
+		<result property="apply_regdate" column="apply_regdate"/>
+		<result property="apply_djob" column="apply_djob"/>
+		<result property="member_no" column="member_no"/>
+		<result property="schedule_no" column="schedule_no"/>
+		<result property="apply_no" column="apply_no"/>
+		<result property="apply_passwd" column="apply_passwd"/>
+	</resultMap>
+
+	<resultMap id="scheduleRes" class="schedule">
+		<result property="schedule_no" column="schedule_no"/>
+		<result property="schedule_regdate" column="schedule_regdate"/>
+		<result property="schedule_addr1" column="schedule_addr1"/>
+		<result property="schedule_addr2" column="schedule_addr2"/>
+		<result property="schedule_time" column="schedule_time"/>
+		<result property="schedule_subject" column="schedule_subject"/>
+		<result property="schedule_content" column="schedule_content"/>
+		<result property="mentor_no" column="mentor_no"/>
+		<result property="schedule_passwd" column="schedule_passwd"/>
+	</resultMap> 
+	
+	<resultMap id="mypageRes" class="mypage">
+		<result property="schedule_time" column="schedule_time"/>
+		<result property="schedule_day" column="schedule_day"/>
+		<result property="member_name" column="member_name"/>
+		<result property="schedule_subject" column="schedule_subject"/>
+		<result property="schedule_count" column="schedule_count"/>
+		<result property="schedule_apply_count" column="schedule_apply_count"/>
+		<result property="mentor_no" column="mentor_no"/>
+		<result property="schedule_no" column="schedule_no"/>
+		<result property="apply_job" column="apply_job"/>
+		<result property="apply_djob" column="apply_djob"/>
+		<result property="apply_achievement" column="apply_achievement"/>
+		<result property="apply_content" column="apply_content"/>
+		<result property="mentor_imagesav" column="mentor_imagesav"/>
+	</resultMap>
+	
+	<sql id="select-all-Apply">
+		select * from apply
+	</sql>
+	
+	<sql id="where-no-Apply">
+		where apply_no = #apply_no#
+	</sql>
+	
+	<select id="applySelectAll" resultMap="applyRes" parameterClass="apply">
+		<include refid="select-all-Apply"/>
+		order by apply_no DESC
+	</select>
+	
+	<select id="applyNoCurrval" resultMap="applyRes" parameterClass="int">
+		<include refid="select-all-Apply" />
+		where apply_no = (select max(apply_no) as apply_no from apply)
+	</select>
+	
+	<select id="applySelectOne" resultMap="applyRes" parameterClass="int">
+		<include refid="select-all-Apply" />
+		<include refid="where-no-Apply" />
+	</select>
+	
+	<select id="applySelectLastNo" resultClass="apply" parameterClass="int">
+		SELECT apply_no 
+		FROM apply
+		where member_no =  #member_no#
+	</select>
+	
+	<select id="applySelectPasswd" resultMap="applyRes" parameterClass="apply">
+		select *
+		from apply
+		where #apply_no# = apply_no
+		and apply_passwd = #apply_passwd#
+	</select>
+	
+	<select id="scheduleSelectForApply" resultClass="schedule" parameterClass="int">
+	select * 
+	from schedule
+	where schedule_no =#schedule_no#
+	</select>
+	
+	<select id="scheduleSelectForApplyModify" resultClass="schedule" parameterClass="int">
+      select *
+      from schedule s, mentor mt
+      where s.mentor_no = mt.mentor_no and s.schedule_no = #schedule_no#
+   </select>
+	
+	<!-- ##$$변경 -->
+	<select id="memberSelectForApply" resultClass="member" parameterClass="int">
+	select *
+	from member m, mentor mt
+	where m.member_no = mt.member_no and mt.mentor_no = #mentor_no#
+	</select>
+	
+	<select id="mentorSelectForApply" resultClass="mentor" parameterClass="int">
+	select *
+	from mentor
+	where mentor_no = #mentor_no#
+	</select>
+	<!-- ##$$ -->
+	<select id="menteeApplySelectMypage" resultMap="mypageRes" parameterClass="int">
+	select 
+	m.member_name, 
+	s.schedule_time,
+	s.schedule_day, 
+	s.schedule_subject, 
+	s.schedule_count,
+	s.schedule_apply_count,
+	s.schedule_no,
+	mt.mentor_no,
+	a.apply_job,
+	a.apply_djob,
+	a.apply_achievement,
+	a.apply_content,
+	mt.mentor_imagesav
+	from apply a, schedule s, mentor mt, member m
+	where m.member_no = mt.member_no and mt.mentor_no = s.mentor_no and s.schedule_no = a.schedule_no and a.member_no= #member_no#
+	order by a.apply_regdate DESC
+	</select>
+	
+	<select id="mentorApplySelectMypage" resultMap="mypageRes" parameterClass="int">
+	select 
+	m.member_name, 
+	s.schedule_time,
+	s.schedule_day, 
+	s.schedule_subject, 
+	s.schedule_count,
+	s.schedule_apply_count,
+	s.schedule_no,
+	mt.mentor_no,
+	a.apply_job,
+	a.apply_djob,
+	a.apply_achievement,
+	a.apply_content,
+	mt.mentor_imagesav
+	from apply a, schedule s, member m, mentor mt
+	where m.member_no = a.member_no and a.schedule_no = s.schedule_no and mt.mentor_no = s.mentor_no and mt.member_no = #member_no#
+	order by a.apply_regdate DESC 	
+	</select>
+	
+	<select id="applySearchSubject" resultMap="scheduleRes" parameterClass="string">
+		select * from schedule s, apply ap
+		 WHERE s.schedule_no = ap.schedule_no and s.schedule_subject like #searchKeyword#
+		 ORDER BY s.schedule_no DESC
+	</select>
+	
+	 <select id="applySearchMTeeName" resultMap="memberRes" parameterClass="string">
+		select * from member m, apply ap
+		 WHERE m.member_no = ap.member_no and m.member_name like #searchKeyword#
+		 ORDER BY m.member_no DESC
+	</select>
+	
+	<select id="applySearchMTorName" resultMap="memberRes" parameterClass="string">
+		select * from member m, apply ap, mentor mt, schedule s
+		WHERE ap.schedule_no = s.schedule_no 
+			and s.mentor_no = mt.mentor_no
+			and mt.member_no = m.member_no
+			and m.member_name like #searchKeyword#
+		ORDER BY member_no DESC
+	</select>
+
+<!-- 	<select id="applySearchDay" resultMap="cboardRes" parameterClass="string">
+		<include refid="select-all-Cboard" />
+		WHERE cboard_content like #searchKeyword#
+		ORDER BY cboard_no DESC
+	</select>  -->
+	
+	<insert id="applyInsert" parameterClass="apply">
+		insert into apply(
+		apply_no,
+		apply_passwd, 
+		apply_achievement, 
+		apply_content,
+		apply_regdate, 
+		apply_djob,
+		apply_job,
+		schedule_no,
+		member_no
+		)
+		VALUES(
+			apply_no_seq.NEXTVAL, 
+			#apply_passwd#,
+			#apply_achievement#, 
+			#apply_content#, 
+			#apply_regdate#, 
+			#apply_djob#, 
+			#apply_job#,
+			#schedule_no#,
+			#member_no#
+		)
+	</insert>
+	
+	<update id="applyUpdate" parameterClass="apply">
+		update APPLY set 
+		apply_job = #apply_job#,
+		apply_content=#apply_content#,
+		apply_achievement=#apply_achievement#,
+		apply_djob=#apply_djob#
+		<include refid="where-no-Apply"/>
+	</update>
+	
+	<delete id="applyDelete" parameterClass="apply">
+		delete from apply
+		<include refid="where-no-Apply"/>
+	</delete>
+</sqlMap>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+	'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+	
+
+<sqlMap>
+	<typeAlias alias="notice" type="Notice.N_VO" />
+	
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="noticeRes" class="notice">
+		<result property="notice_no" column="notice_no" />
+		<result property="notice_subject" column="notice_subject" />
+		<result property="notice_content" column="notice_content" />
+		<result property="notice_fileorg" column="notice_fileorg" />
+		<result property="notice_filesav" column="notice_filesav" />
+		<result property="notice_readhit" column="notice_readhit" />
+		<result property="notice_regdate" column="notice_regdate" />
+		<result property="notice_passwd" column="notice_passwd" />
+		<result property="notice_hot" column="notice_hot" />
+		<!--  <result property="member_no" column="member_no" />-->
+	</resultMap>
+
+	
+	<!-- 공통으로 사용할 select절 정의 -->
+	<sql id="select-all-Notice">
+		SELECT * FROM NOTICE
+	</sql>
+	
+	<!-- 공통으로 사용할 where-no-CBoard절 정의 -->
+	<sql id="where-no-Notice">
+		WHERE notice_no = #notice_no#
+	</sql>
+		<sql id="where-no-Notice2">
+		WHERE notice_hot = #notice_hot#
+	</sql>
+
+	
+		
+	
+	
+	<!-- select 쿼리문 정의  -->
+	
+	<select id="noticeSelectAll" resultMap="noticeRes"  parameterClass="String">
+		<include refid="select-all-Notice" />
+		ORDER BY notice_no DESC
+</select>
+
+<!-- notice_hot의 값이 1인 글을 보여주기위한 select문 -->
+	<select id="noticeSelectAll2" resultMap="noticeRes"  parameterClass="String">
+		<include refid="select-all-Notice" />
+	WHERE notice_hot = 1 Order By notice_hot DESC
+</select>
+	
+		
+	
+
+	<select id="noticeSelectOne" resultMap="noticeRes" parameterClass="int">
+		<include refid="select-all-Notice" />
+		<include refid="where-no-Notice" />
+		
+	</select>
+	
+
+
+	<!-- <select id="noticeSelectNo" resultMap="noticeRes" parameterClass="int">
+		select cb.cboard_subject from cboard cb, member m where cb.member_no=m.member_no
+	</select> -->
+	
+	<select id="noticeSelectLastNo" resultClass="notice" parameterClass="int">
+		SELECT max(notice_no) as notice_no FROM notice
+</select>
+
+
+	
+
+
+
+	
+	
+	<!--  현재 글의 비밀번호 가져오기. -->
+	<select id="noticeselectPasswd" resultMap="noticeRes">
+		<include refid="select-all-Notice"/>
+		<include refid="where-no-Notice" />
+		AND notice_passwd = #notice_passwd#
+	</select>
+	
+	<!-- 검색 로직 -->
+	<select id="noticeSearchS" resultMap="noticeRes" parameterClass="string">
+		<include refid="select-all-Notice" />
+		WHERE notice_subject like #searchKeyword#
+		ORDER BY notice_no DESC
+	</select>
+	
+	<select id="noticeSearchC" resultMap="noticeRes" parameterClass="string">
+		<include refid="select-all-Notice" />
+		WHERE notice_content like #searchKeyword#
+		ORDER BY notice_no DESC
+	</select>
+	
+	<!-- insert 쿼리문 정의 -->
+	
+	<insert id="noticeInsert" parameterClass="notice">
+		INSERT INTO NOTICE(NOTICE_NO, NOTICE_SUBJECT, NOTICE_CONTENT, NOTICE_REGDATE, NOTICE_FILEORG, NOTICE_FILESAV, NOTICE_PASSWD,NOTICE_HOT)
+		VALUES(NOTICE_NO_SEQ.NEXTVAL, #notice_subject#, #notice_content#, #notice_regdate#, #notice_fileorg#, #notice_filesav#, #notice_passwd#,#notice_hot#)
+	</insert>
+	
+	
+	<!-- update 쿼리문 정의 -->
+	
+	<update id="noticeUpdate" parameterClass="notice">
+		UPDATE NOTICE SET NOTICE_SUBJECT=#notice_subject#, NOTICE_CONTENT=#notice_content#, NOTICE_PASSWD=#notice_passwd# ,NOTICE_HOT=#notice_hot#
+					<include refid="where-no-Notice"/>	  
+	</update>				  
+		
+	
+	
+
+	<update id="noticeUpdateFile" parameterClass="notice">
+		UPDATE NOTICE SET NOTICE_FILEORG=#notice_fileorg#
+						  ,NOTICE_FILESAV=#notice_filesav#
+	<include refid="where-no-Notice"/>
+	</update>
+	 
+	
+	<update id="noticeUpdateReadHit" parameterClass="notice">
+		UPDATE NOTICE SET NOTICE_READHIT = notice_readhit + 1
+	<include refid="where-no-Notice"/>
+	</update>
+	
+	
+	<!-- delete 쿼리문 정의 -->
+
+	<delete id="noticeDelete" parameterClass="notice">
+		DELETE FROM NOTICE
+		<include refid="where-no-Notice"/>
+	</delete>
+	
+	
+	
+</sqlMap>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+	'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+	
+<sqlMap>
+	<typeAlias alias="mentor" type="Mentor.MTor_VO" />
+	<typeAlias alias="rboard" type="RBoard.RB_VO" />
+	<typeAlias alias="cboard" type="CBoard.CB_VO" />
+	<typeAlias alias="rcomment" type="RComment.RC_VO"/>
+	<typeAlias alias="ccomment" type="CComment.CC_VO" />
+	
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="mentorRes" class="mentor">
+		<result property="mentor_no" column="mentor_no" />
+		<result property="mentor_intro" column="mentor_intro" />
+		<result property="member_no" column="member_no" />
+		<result property="mentor_etc" column="mentor_etc" />
+		<result property="mentor_image" column="mentor_image" />
+		<result property="mentor_university" column="mentor_university" />
+		<result property="mentor_carrer" column="mentor_carrer" />
+		<result property="mentor_job" column="mentor_job" />
+		<result property="mentor_imagesav" column="mentor_imagesav" />
+		<result property="mentor_passwd" column="mentor_passwd" />
+	</resultMap>
+	<resultMap id="rboardRes" class="rboard">
+		<result property="rboard_no" column="rboard_no" />
+		<result property="rboard_subject" column="rboard_subject" />
+		<result property="rboard_content" column="rboard_content" />
+		<result property="rboard_fileorg" column="rboard_fileorg" />
+		<result property="rboard_filesav" column="rboard_filesav" />
+		<result property="rboard_readhit" column="rboard_readhit" />
+		<result property="rboard_regdate" column="rboard_regdate" />
+		<result property="rboard_passwd" column="rboard_passwd" />
+		<result property="member_no" column="member_no" />
+	</resultMap>
+	<resultMap id="cboardRes" class="cboard">
+		<result property="cboard_no" column="cboard_no" />
+		<result property="cboard_subject" column="cboard_subject" />
+		<result property="cboard_content" column="cboard_content" />
+		<result property="cboard_fileorg" column="cboard_fileorg" />
+		<result property="cboard_filesav" column="cboard_filesav" />
+		<result property="cboard_readhit" column="cboard_readhit" />
+		<result property="cboard_regdate" column="cboard_regdate" />
+		<result property="cboard_passwd" column="cboard_passwd" />
+		<result property="member_no" column="member_no" />
+	</resultMap>
+	<resultMap id="rcommentRes" class="rcomment">
+		<result property="rcomment_no" column="rcomment_no"/>
+		<result property="rcomment_passwd" column="rcomment_passwd"/>
+		<result property="rcomment_content" column="rcomment_content"/>
+		<result property="rcomment_regdate" column="rcomment_regdate"/>
+		<result property="member_no" column="member_no"/>
+		<result property="rboard_no" column="rboard_no"/>
+	</resultMap>
+	<resultMap id="ccommentRes" class="ccomment">
+		<result property="ccomment_no" column="ccomment_no"/>
+		<result property="ccomment_passwd" column="ccomment_passwd"/>
+		<result property="ccomment_content" column="ccomment_content"/>
+		<result property="ccomment_regdate" column="ccomment_regdate"/>
+		<result property="member_no" column="member_no"/>
+		<result property="cboard_no" column="cboard_no"/>
+	</resultMap>
+	
+	<!-- 마이페이지 : 멘토-멘토등록상세보기 보여주기 위해 멘토넘버 가지고 오기 -->
+	<select id="SelectMentorNo" resultClass="int" parameterClass="int">
+		select mentor_no from mentor
+		where member_no = #member_no#
+	</select>
+	
+	
+	<!-- 마이페이지 : 내가 쓴 글 가져오기 -->
+	<select id="SelectAllMyList" resultClass="rboard">
+		select rboard_no, rboard_subject, rboard_content, rboard_regdate, rboard_readhit, rboard_index, member_no
+		from
+		(
+		(select r.rboard_no, r.rboard_subject, r.rboard_content , r.rboard_regdate, r.rboard_readhit, r.rboard_index, r.member_no
+		from rboard r)
+		union all
+		(select c.cboard_no as rboard_no, c.cboard_subject as rboard_subject, c.cboard_content as rboard_content , c.cboard_regdate as rboard_regdate, c.cboard_readhit as rboard_readhit, c.cboard_index as rboard_index, c.member_no as member_no
+		from cboard c)
+		)
+		where member_no = #member_no#
+		order by rboard_regdate DESC
+
+	</select>
+	
+	<!-- 마이페이지 : 내가 쓴 글/제목 검색해서 가져오기 -->
+	<select id="SelectMyListSubject" resultClass="rboard" parameterClass="java.util.Map">
+		select rboard_no, rboard_subject, rboard_content, rboard_regdate, rboard_readhit, rboard_index, member_no
+		from
+		(
+		(select r.rboard_no, r.rboard_subject, r.rboard_content , r.rboard_regdate, r.rboard_readhit, r.rboard_index, r.member_no
+		from rboard r)
+		union all
+		(select c.cboard_no as rboard_no, c.cboard_subject as rboard_subject, c.cboard_content as rboard_content , c.cboard_regdate as rboard_regdate, c.cboard_readhit as rboard_readhit, c.cboard_index as rboard_index, c.member_no as member_no
+		from cboard c)
+		)
+		where member_no = #member_no# AND RBOARD_SUBJECT like #searchKeyword#
+		order by rboard_regdate DESC
+
+	</select>
+	
+	<!-- 마이페이지 : 내가 쓴 글/내용 검색해서 가져오기 -->
+	<select id="SelectMyListContent" resultClass="rboard" parameterClass="java.util.Map">
+		select rboard_no, rboard_subject, rboard_content, rboard_regdate, rboard_readhit, rboard_index, member_no
+		from
+		(
+		(select r.rboard_no, r.rboard_subject, r.rboard_content , r.rboard_regdate, r.rboard_readhit, r.rboard_index, r.member_no
+		from rboard r)
+		union all
+		(select c.cboard_no as rboard_no, c.cboard_subject as rboard_subject, c.cboard_content as rboard_content , c.cboard_regdate as rboard_regdate, c.cboard_readhit as rboard_readhit, c.cboard_index as rboard_index, c.member_no as member_no
+		from cboard c)
+		)
+		where member_no = #member_no# AND RBOARD_CONTENT like #searchKeyword#
+		order by rboard_regdate DESC
+	</select>
+	
+	<!-- 마이페이지 - 내가 쓴 댓글 가져오기 -->
+	<!-- 원문제목은 as rcomment_passwd으로 불러들여서 저장하였음 -->
+	<select id="cSelectAllMyList" resultClass="rcomment">
+	select rboard_no,rcomment_passwd,rcomment_no,rcomment_content,rcomment_regdate,rcomment_index,member_no
+	from
+	(
+	(select rb.rboard_subject as rcomment_passwd,rc.rboard_no,rc.rcomment_no,rc.rcomment_content,rc.rcomment_regdate,rc.rcomment_index,rc.member_no
+	from rboard rb inner join rcomment rc
+	on rb.rboard_no = rc.rboard_no)
+	union all
+	(select cb.cboard_subject as rcomment_passwd,cc.cboard_no as rboard_no,cc.ccomment_no as rcomment_no,cc.ccomment_content as rcomment_content,cc.ccomment_regdate as rcomment_regdate,cc.ccomment_index as rcomment_index,cc.member_no as member_no
+	from cboard cb inner join ccomment cc
+	on cb.cboard_no = cc.cboard_no)
+	)
+	where member_no = #member_no#
+	order by rcomment_regdate DESC
+	</select>
+	
+	<!-- 마이페이지 - 내가 쓴 댓글 가져오기  - 원문제목 검색 -->
+	<!-- 원문제목은 as rcomment_passwd으로 불러들여서 저장하였음 -->
+	<select id="cSelectMyListSubject" resultClass="rcomment">
+	select rboard_no,rcomment_passwd,rcomment_no,rcomment_content,rcomment_regdate,rcomment_index,member_no
+	from
+	(
+	(select rb.rboard_subject as rcomment_passwd,rc.rboard_no,rc.rcomment_no,rc.rcomment_content,rc.rcomment_regdate,rc.rcomment_index,rc.member_no
+	from rboard rb inner join rcomment rc
+	on rb.rboard_no = rc.rboard_no)
+	union all
+	(select cb.cboard_subject as rcomment_passwd,cc.cboard_no as rboard_no,cc.ccomment_no as rcomment_no,cc.ccomment_content as rcomment_content,cc.ccomment_regdate as rcomment_regdate,cc.ccomment_index as rcomment_index,cc.member_no as member_no
+	from cboard cb inner join ccomment cc
+	on cb.cboard_no = cc.cboard_no)
+	)
+	where member_no = #member_no# AND RCOMMENT_PASSWD like #searchKeyword#
+	order by rcomment_regdate DESC
+	</select>
+	
+	<!-- 마이페이지 - 내가 쓴 댓글 가져오기  - 댓글내용 검색 -->
+	<!-- 원문제목은 as rcomment_passwd으로 불러들여서 저장하였음 -->
+	<select id="cSelectMyListContent" resultClass="rcomment">
+	select rboard_no,rcomment_passwd,rcomment_no,rcomment_content,rcomment_regdate,rcomment_index,member_no
+	from
+	(
+	(select rb.rboard_subject as rcomment_passwd,rc.rboard_no,rc.rcomment_no,rc.rcomment_content,rc.rcomment_regdate,rc.rcomment_index,rc.member_no
+	from rboard rb inner join rcomment rc
+	on rb.rboard_no = rc.rboard_no)
+	union all
+	(select cb.cboard_subject as rcomment_passwd,cc.cboard_no as rboard_no,cc.ccomment_no as rcomment_no,cc.ccomment_content as rcomment_content,cc.ccomment_regdate as rcomment_regdate,cc.ccomment_index as rcomment_index,cc.member_no as member_no
+	from cboard cb inner join ccomment cc
+	on cb.cboard_no = cc.cboard_no)
+	)
+	where member_no = #member_no# AND RCOMMENT_CONTENT like #searchKeyword#
+	order by rcomment_regdate DESC
+	</select>
+	
+	
+</sqlMap>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+	'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+	
+
+<sqlMap>
+	<typeAlias alias="cboard" type="CBoard.CB_VO" />
+	
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="cboardRes" class="cboard">
+		<result property="cboard_no" column="cboard_no" />
+		<result property="cboard_subject" column="cboard_subject" />
+		<result property="cboard_content" column="cboard_content" />
+		<result property="cboard_fileorg" column="cboard_fileorg" />
+		<result property="cboard_filesav" column="cboard_filesav" />
+		<result property="cboard_readhit" column="cboard_readhit" />
+		<result property="cboard_regdate" column="cboard_regdate" />
+		<result property="cboard_passwd" column="cboard_passwd" />
+		<result property="member_no" column="member_no" />
+
+	</resultMap>
+
+	
+	<!-- 공통으로 사용할 select절 정의 -->
+	<sql id="select-all-Cboard">
+		SELECT * FROM CBOARD
+	</sql>
+	
+	<!-- 공통으로 사용할 where-no-CBoard절 정의 -->
+	<sql id="where-no-CBoard">
+		WHERE cboard_no = #cboard_no#
+	</sql>
+	
+	
+	<!-- select 쿼리문 정의  -->
+	
+	<select id="cboardSelectAll" resultClass="cboard" >
+		select  cb.cboard_no, cb.cboard_subject, m.member_id, cb.cboard_readhit, cb.cboard_regdate
+		from cboard cb join member m
+		on cb.member_no=m.member_no
+		order by cb.cboard_no desc
+	</select>
+	
+	<select id="cboardSelectOne" resultMap="cboardRes" parameterClass="int">
+		<include refid="select-all-Cboard" />
+		<include refid="where-no-CBoard" />
+	</select>
+	
+
+	
+	<select id="cboardSelectNo" resultMap="cboardRes" parameterClass="int">
+		select cb.cboard_subject from cboard cb, member m where cb.member_no=m.member_no
+	</select>
+	
+	<select id="cboardSelectLastNo" resultClass="cboard" parameterClass="int">
+		SELECT max(cboard_no) as cboard_no FROM cboard
+	</select>
+	
+	<!--  현재 글의 비밀번호 가져오기. -->
+	<select id="cboardselectPasswd" resultMap="cboardRes">
+		<include refid="select-all-Cboard"/>
+		<include refid="where-no-CBoard" />
+		AND cboard_passwd = #cboard_passwd#
+	</select>
+	
+		<!-- 검색 -->
+	<select id="cboardSearchW" resultMap="cboardRes" parameterClass="string">
+		<include refid="select-all-Cboard" />
+		 WHERE cboard_subject like #searchKeyword#
+		 ORDER BY cboard_no DESC
+	</select>
+	
+	<select id="cboardSearchS" resultMap="cboardRes" parameterClass="string">
+		<include refid="select-all-Cboard" />
+		 WHERE cboard_content like #searchKeyword#
+		 ORDER BY cboard_no DESC
+	</select>
+	
+	<select id="cboardSearchC" resultMap="cboardRes" parameterClass="string">
+		<include refid="select-all-Cboard" />
+		WHERE cboard_content like #searchKeyword#
+		ORDER BY cboard_no DESC
+	</select>
+
+	
+	<!-- insert 쿼리문 정의 -->
+	
+	<insert id="cboardInsert" parameterClass="cboard">
+		INSERT INTO CBOARD(CBOARD_NO, CBOARD_SUBJECT, CBOARD_CONTENT, CBOARD_REGDATE, CBOARD_FILEORG, CBOARD_FILESAV, CBOARD_PASSWD, MEMBER_NO, CBOARD_READHIT)
+		VALUES(CBOARD_NO_SEQ.NEXTVAL, #cboard_subject#, #cboard_content#, #cboard_regdate#, #cboard_fileorg#, #cboard_filesav#, #cboard_passwd#, #member_no#, '0')
+	</insert>
+	
+	
+	<!-- update 쿼리문 정의 -->
+	
+	<update id="cboardUpdate" parameterClass="cboard">
+		UPDATE CBOARD SET CBOARD_SUBJECT=#cboard_subject#, CBOARD_CONTENT=#cboard_content#, CBOARD_PASSWD=#cboard_passwd#
+					<include refid="where-no-CBoard"/>	  
+	</update>				  
+
+	<update id="cboardUpdateFile" parameterClass="cboard">
+		UPDATE CBOARD SET CBOARD_FILEORG=#cboard_fileorg#
+						  ,CBOARD_FILESAV=#cboard_filesav#
+	<include refid="where-no-CBoard"/>
+	</update>
+	 
+	
+	<update id="cboardUpdateReadHit" parameterClass="cboard">
+		UPDATE CBOARD SET CBOARD_READHIT = cboard_readhit + 1
+	<include refid="where-no-CBoard"/>
+	</update>
+	
+	
+	<!-- delete 쿼리문 정의 -->
+
+	<delete id="cboardDelete" parameterClass="cboard">
+		DELETE FROM CBOARD
+		<include refid="where-no-CBoard"/>
+	</delete>
+	
+	
+	
+</sqlMap>

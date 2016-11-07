@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+	'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+	
+	
+<sqlMap>
+	<typeAlias alias="iboard" type="IBoard.IB_VO" />
+	<typeAlias alias="rboard" type="RBoard.RB_VO" />
+	<typeAlias alias="member" type="Member.Mem_VO" />
+	<typeAlias alias="mentor" type="Mentor.MTor_VO" />
+	<typeAlias alias="apply" type="Apply.AP_VO"/>
+	
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="iboardRes" class="iboard">
+		<result property="iboard_no" column="iboard_no" />
+		<result property="iboard_subject" column="iboard_subject" />
+		<result property="iboard_content" column="iboard_content" />
+		<result property="iboard_fileorg" column="iboard_fileorg" />
+		<result property="iboard_filesav" column="iboard_filesav" />
+		<result property="iboard_readhit" column="iboard_readhit" />
+		<result property="iboard_regdate" column="iboard_regdate" />
+		<result property="iboard_passwd" column="iboard_passwd" />
+	</resultMap>
+
+	<resultMap id="rboardRes" class="rboard">
+		<result property="rboard_no" column="rboard_no" />
+		<result property="rboard_subject" column="rboard_subject"/>
+		<result property="rboard_content" column="rboard_content" />
+		<result property="rboard_fileorg" column="rboard_fileorg" />
+		<result property="rboard_filesav" column="rboard_filesav" />
+		<result property="rboard_readhit" column="rboard_readhit" />
+		<result property="rboard_regdate" column="rboard_regdate" />
+		<result property="rboard_passwd" column="rboard_passwd" />
+		<result property="member_no" column="member_no" />
+	</resultMap>
+	
+	<resultMap id="memberRes" class="member" >
+		<result property="member_no" column="MEMBER_NO" />
+		<result property="member_id" column="MEMBER_ID" />
+		<result property="member_passwd" column="MEMBER_PASSWD" />
+		<result property="member_name" column="MEMBER_NAME" />
+		<result property="member_email" column="MEMBER_EMAIL" />
+		<result property="member_phone" column="MEMBER_PHONE" />
+		<result property="member_index" column="MEMBER_INDEX" />
+		<result property="member_zipcode" column="MEMBER_ZIPCODE" />
+		<result property="member_address" column="MEMBER_ADDRESS" />
+		<result property="member_sex" column="MEMBER_SEX"/>
+		<result property="member_birthdate" column="MEMBER_BIRTHDATE"/>
+	</resultMap>
+	
+	<resultMap id="mentorRes" class="mentor">
+	<result property="mentor_no" column="mentor_no" />
+	<result property="mentor_intro" column="mentor_intro" />
+	<result property="member_no" column="member_no" />
+	<result property="mentor_etc" column="mentor_etc" />
+	<result property="mentor_image" column="mentor_image" />
+	<result property="mentor_university" column="mentor_university" />
+	<result property="mentor_carrer" column="mentor_carrer" />
+	<result property="mentor_job" column="mentor_job" />
+	<result property="mentor_imagesav" column="mentor_imagesav" />
+	<result property="mentor_passwd" column="mentor_passwd" />
+	
+</resultMap>
+
+	<resultMap id="applyRes" class="apply">
+		<result property="apply_job" column="apply_job"/>
+		<result property="apply_achievement" column="apply_achievement"/>
+		<result property="apply_content" column="apply_content"/>
+		<result property="apply_regdate" column="apply_regdate"/>
+		<result property="apply_djob" column="apply_djob"/>
+		<result property="member_no" column="member_no"/>
+		<result property="schedule_no" column="schedule_no"/>
+		<result property="apply_no" column="apply_no"/>
+		<result property="apply_passwd" column="apply_passwd"/>
+	</resultMap>
+	
+		<!-- 메인 : 직무게시글 현황/총 개수 -->
+	<select id="iboardSelectCount" resultClass="iboard">
+		SELECT COUNT(*) as iboard_no FROM IBOARD
+	</select>
+	
+		<!-- 메인 : 후기게시글 현황/총 개수 -->
+	<select id="rboardSelectCount" resultClass="rboard">
+		select count(*) as rboard_no from rboard
+	</select>
+	
+		<!-- 메인 : 멘토 현황/총 인원 -->
+	<select id="mentorSelectCount" resultClass="member">
+		select count(*) as member_no from member where member_index = '1'
+	</select>
+	
+		<!-- 메인 : 스케쥴 현황 -->
+	<select id="mentoringSelectCount" resultClass="mentor">
+		select count(*) as mentor_no from mentor
+	</select>
+	
+		<!-- 메인 : 멘토링 신청 현황 -->
+	<select id="applySelectCount" resultClass="apply">
+		select count(*) as apply_no from apply
+	</select>
+	
+	
+</sqlMap>

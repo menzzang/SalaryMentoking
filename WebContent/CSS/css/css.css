@@ -1,0 +1,69 @@
+table {font:85% "Lucida Grande", "Lucida Sans Unicode", "Trebuchet MS", sans-serif; padding: 0; margin: 0; border-collapse: collapse; color: #333; }
+
+table a {color: #3A4856; text-decoration: none; }  
+
+table a:visited {color: #777;}
+
+table a:hover {color: #000;}  	
+
+table caption {text-align: left; text-transform: uppercase;  padding-bottom: 10px; font: 200% "Lucida Grande", "Lucida Sans Unicode", "Trebuchet MS", sans-serif;}
+
+.table thead th {background: #85889c; padding: 5px 10px; color: #fff; font-weight: normal;}
+.table tbody, table thead {border-left: 1px solid #EAECEE; border-right: 1px solid #EAECEE;}
+.table tbody {border-bottom: 1px solid #EAECEE;}                     
+.table tbody td, table tbody th {padding: 7px; background: url("td_back.gif") repeat-x;}
+.table tbody tr {background: #F3F5F7;}
+.table tbody tr.odd {background: #F0F2F4;}
+.table tbody  tr:hover {background: #EAECEE; color: #111;}
+.table tfoot td, table tfoot th, table tfoot tr {text-align: left; font: 120%  "Lucida Grande", "Lucida Sans Unicode", "Trebuchet MS", sans-serif; text-transform: uppercase; background: #fff; padding: 10px;}
+.table a { color: #3A4856; text-decoration: none; border-bottom: 1px solid #C6C8CB; }  
+
+.button {
+   border: 0px solid #86a6b8;
+   background: #51668f;
+   background: -webkit-gradient(linear, left top, left bottom, from(#b5bdf2), to(#51668f));
+   background: -webkit-linear-gradient(top, #b5bdf2, #51668f);
+   background: -moz-linear-gradient(top, #b5bdf2, #51668f);
+   background: -ms-linear-gradient(top, #b5bdf2, #51668f);
+   background: -o-linear-gradient(top, #b5bdf2, #51668f);
+   background-image: -ms-linear-gradient(top, #b5bdf2 0%, #51668f 100%);
+   padding: 9.5px 25px;
+   -webkit-border-radius: 2px;
+   -moz-border-radius: 2px;
+   border-radius: 2px;
+   -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+   -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+   box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+   text-shadow: #9db1bd 0 1px 0;
+   color: #ffffff;
+   font-size: 13px;
+   font-family: 85% "Lucida Grande", "Lucida Sans Unicode", "Trebuchet MS", sans-serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+ .button:hover {
+   border: 0px solid #837cde;
+   text-shadow: #88c3e8 0 1px 0;
+   background: #4a4773;
+   background: -webkit-gradient(linear, left top, left bottom, from(#9899e3), to(#4a4773));
+   background: -webkit-linear-gradient(top, #9899e3, #4a4773);
+   background: -moz-linear-gradient(top, #9899e3, #4a4773);
+   background: -ms-linear-gradient(top, #9899e3, #4a4773);
+   background: -o-linear-gradient(top, #9899e3, #4a4773);
+   background-image: -ms-linear-gradient(top, #9899e3 0%, #4a4773 100%);
+   color: #fff;
+   }
+ .button:active {
+   text-shadow: #1e2f57 0 1px 0;
+   border: 0px solid #0a3c59;
+   background: #4b417a;
+   background: -webkit-gradient(linear, left top, left bottom, from(#7b85d9), to(#4a4773));
+   background: -webkit-linear-gradient(top, #7b85d9, #4b417a);
+   background: -moz-linear-gradient(top, #7b85d9, #4b417a);
+   background: -ms-linear-gradient(top, #7b85d9, #4b417a);
+   background: -o-linear-gradient(top, #7b85d9, #4b417a);
+   background-image: -ms-linear-gradient(top, #7b85d9 0%, #4b417a 100%);
+   color: #fff;
+   }
+   
+.test{ color: #dfdfdf}

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+	'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+	
+
+<sqlMap>
+	<typeAlias alias="rboard" type="RBoard.RB_VO" />
+	
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="rboardRes" class="rboard">
+		<result property="rboard_no" column="rboard_no" />
+		<result property="rboard_subject" column="rboard_subject"/>
+		<result property="rboard_content" column="rboard_content" />
+		<result property="rboard_fileorg" column="rboard_fileorg" />
+		<result property="rboard_filesav" column="rboard_filesav" />
+		<result property="rboard_readhit" column="rboard_readhit" />
+		<result property="rboard_regdate" column="rboard_regdate" />
+		<result property="rboard_passwd" column="rboard_passwd" />
+		<result property="member_no" column="member_no" />
+		<result property="mentor_no" column="mentor_no"/>
+	</resultMap>
+	
+	<resultMap id="memberRes" class="member" >
+		<result property="member_no" column="member_no" />
+		<result property="member_id" column="member_id" />
+		<result property="member_passwd" column="member_passwd" />
+		<result property="member_name" column="member_name" />
+		<result property="member_email" column="member_email" />
+		<result property="member_phone" column="member_phone" />
+		<result property="member_index" column="member_index" />
+		<result property="member_zipcode" column="member_zipcode" />
+		<result property="member_address" column="member_address" />
+		<result property="member_sex" column="member_sex"/>
+		<result property="member_birthdate" column="member_birthdate"/>
+	</resultMap>
+	
+	
+	<!-- 공통으로 사용할 select절 정의 -->
+	<sql id="select-all-Rboard">
+		SELECT * FROM RBOARD
+	</sql>
+	
+	<!-- 공통으로 사용할 where-no-CBoard절 정의 -->
+	<sql id="where-no-Rboard">
+		WHERE rboard_no = #rboard_no#
+	</sql>
+	
+	<!-- select 쿼리문 정의  -->
+	  <select id="rboardSelect" resultClass="rboard" parameterClass="rboard"  remapResults="true">
+		select 
+		*
+      from 
+      rboard r,
+      mentor mt,
+      member m
+      where m.member_no = r.member_no and mt.mentor_no = r.mentor_no and r.mentor_no = #mentor_no#
+      ORDER BY r.rboard_no DESC 
+   </select>
+	
+	<select id="rboardSelectOne" resultMap="rboardRes" parameterClass="int">
+		<include refid="select-all-Rboard" />
+		<include refid="where-no-Rboard" />
+	</select>
+	
+	<select id="rboardSelectNo" resultMap="rboardRes" parameterClass="int">
+		select rb.rboard_subject from rboard rb, member m where rb.member_no=m.member_no
+	</select>
+	
+	<select id="rboardSelectLastNo" resultClass="rboard" parameterClass="int">
+		SELECT max(rboard_no) as rboard_no FROM rboard
+	</select>
+	
+	<!--  현재 글의 비밀번호 가져오기. -->
+	<select id="rboardselectPasswd" resultMap="rboardRes">
+		<include refid="select-all-Rboard"/>
+		<include refid="where-no-Rboard" />
+		AND rboard_passwd = #rboard_passwd#
+	</select>
+	
+		<!-- 검색 로직 -->
+	<select id="rboardSearchW" resultMap="rboardRes" parameterClass="string">
+		<include refid="select-all-Rboard" />
+		 WHERE rboard_subject like #searchKeyword#
+		 ORDER BY rboard_no DESC
+	</select>
+		
+	<select id="rboardSearchS" resultMap="rboardRes" parameterClass="string">
+	
+ 
+select *
+from member m join rboard r
+on r.member_no = m.member_no 
+where m.member_id like #searchKeyword#
+ORDER BY rboard_no DESC 
+	 
+
+
+	</select>
+	
+	<select id="rboardSearchC" resultMap="rboardRes" parameterClass="string">
+		<include refid="select-all-Rboard" />
+		WHERE rboard_content like #searchKeyword#
+		ORDER BY rboard_no DESC
+	</select>
+	
+	<!-- 마이페이지 : 내가 쓴 글 가져오기 -->
+ 	<select id="rboardSelectAllMyList" resultClass="rboard">
+		select rboard_no, rboard_subject, rboard_content, rboard_regdate, rboard_readhit, rboard_index, member_no ,
+		from
+		(
+		(select r.rboard_no, r.rboard_subject, r.rboard_content , r.rboard_regdate, r.rboard_readhit, r.rboard_index, r.member_no
+		from rboard r)
+		union all
+		(select c.cboard_no as rboard_no, c.cboard_subject as rboard_subject, c.cboard_content as rboard_content , c.cboard_regdate as rboard_regdate, c.cboard_readhit as rboard_readhit, c.cboard_index as rboard_index, c.member_no as member_no
+		from cboard c)
+		)
+		where member_no = #member_no#
+		order by rboard_regdate DESC
+	</select>
+	
+	<!-- insert 쿼리문 정의 -->
+	
+	<insert id="rboardInsert" parameterClass="rboard">
+		INSERT INTO RBOARD(
+		RBOARD_NO, 
+		RBOARD_SUBJECT, 
+		RBOARD_CONTENT, 
+		RBOARD_REGDATE, 
+		RBOARD_FILEORG, 
+		RBOARD_FILESAV, 
+		RBOARD_READHIT, 
+		RBOARD_PASSWD, 
+		MEMBER_NO,
+		mentor_no
+		)
+		VALUES(
+		RBOARD_NO_SEQ.NEXTVAL, 
+		#rboard_subject#, 
+		#rboard_content#, 
+		#rboard_regdate#, 
+		#rboard_fileorg#, 
+		#rboard_filesav#, 
+		0, 
+		#rboard_passwd#, 
+		#member_no#,
+		#mentor_no#
+		)
+		
+	</insert>
+	
+	<!-- update 쿼리문 정의 -->
+	<update id="rboardUpdate" parameterClass="rboard">
+		UPDATE RBOARD SET RBOARD_SUBJECT=#rboard_subject#, RBOARD_CONTENT=#rboard_content#, RBOARD_PASSWD=#rboard_passwd#
+					<include refid="where-no-Rboard"/>	  
+	</update>				  
+	
+
+	<update id="rboardUpdateFile" parameterClass="rboard">
+		UPDATE RBOARD SET RBOARD_FILEORG=#rboard_fileorg#
+						  ,RBOARD_FILESAV=#rboard_filesav#
+	<include refid="where-no-Rboard"/>
+	</update>
+	 
+	
+	<update id="rboardUpdateReadHit" parameterClass="rboard">
+		UPDATE RBOARD SET RBOARD_READHIT = rboard_readhit + 1
+	<include refid="where-no-Rboard"/>
+	</update>
+	
+	<!-- delete 쿼리문 정의 -->
+	<delete id="rboardDelete" parameterClass="rboard">
+		DELETE FROM RBOARD
+		<include refid="where-no-Rboard"/>
+	</delete>
+	
+</sqlMap>

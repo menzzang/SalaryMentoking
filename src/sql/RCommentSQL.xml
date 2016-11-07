@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+	'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+	
+	
+<sqlMap>
+	<typeAlias alias="rcomment" type="RComment.RC_VO"/>
+	
+	<resultMap id="rcommentRes" class="rcomment">
+		<result property="rcomment_no" column="rcomment_no"/>
+		<result property="rcomment_passwd" column="rcomment_passwd"/>
+		<result property="rcomment_content" column="rcomment_content"/>
+		<result property="rcomment_regdate" column="rcomment_regdate"/>
+		<result property="member_no" column="member_no"/>
+		<result property="rboard_no" column="rboard_no"/>
+	</resultMap>
+	
+	<sql id="select-Rcomment">
+		select rc.rcomment_no, rc.rcomment_passwd, rc.rcomment_content, rc.rcomment_regdate, m.member_no, rb.rboard_no
+		from rcomment rc, member m, rboard rb
+		where m.member_no=rc.member_no and rc.rboard_no=rb.rboard_no
+	</sql>
+	
+	<sql id="select-all-Rcomment">
+		select * from rcomment
+	</sql>
+	
+	<sql id="where-no-Rcomment">
+		where rcomment_no = #rcomment_no#
+	</sql>
+	
+<!-- 	<select id="rcommentSelectAll" resultMap="rcommentRes" parameterClass="int">
+		<include refid ="select-all-Rcomment"/>
+		where rcomment_no=#rcomment_no#
+		order by rcomment_no DESC
+	</select> -->
+	<select id="rcommentSelectAll" resultMap="rcommentRes" parameterClass="int">
+	<!-- select  cb.cboard_no, cb.cboard_subject, m.member_id, cb.cboard_readhit, cb.cboard_regdate
+from cboard cb join member m
+on cb.member_no=m.member_no -->
+		SELECT * FROM
+		(SELECT m.member_id as rcomment_passwd, m.member_no
+		FROM MEMBER m)
+		inner join
+		(SELECT r.rboard_no,r.rcomment_no,r.rcomment_regdate,r.rcomment_content,r.member_no
+		FROM RCOMMENT r)
+		using (member_no)
+		where rboard_no = #rboard_no#
+	</select>
+
+	
+	<select id="rcommentSelectOne" resultMap="rcommentRes" parameterClass="int">
+		<include refid="select-all-Rcomment" />
+		<include refid="where-no-Rcomment" />
+	</select>
+	
+	<select id="rcommentSelectNo" resultMap="rcommentRes" parameterClass="int">
+		select rc.rcomment_content from rcomment rc, member m where rc.member_no=m.member_no
+	</select>
+	<select id="rcommentSelectLastNo" resultClass="rcomment" parameterClass="int">
+		SELECT max(rcomment_no) as rcomment_no FROM rcomment
+	</select>
+	
+	<select id="rcommentselectPasswd" resultMap="rcommentRes">
+		<include refid="select-all-Rcomment"/>
+		<include refid="where-no-Rcomment" />
+		AND rcomment_passwd = #rcomment_passwd#
+	</select>
+	
+	
+	<insert id="rcommentInsert" parameterClass="rcomment">
+		INSERT INTO RCOMMENT(
+		RCOMMENT_NO,
+		RCOMMENT_PASSWD,
+		RCOMMENT_CONTENT,
+		RCOMMENT_REGDATE,
+		member_no,
+		rboard_no
+		)
+		
+		VALUES(
+		RCOMMENT_NO_SEQ.NEXTVAL,
+		#rcomment_passwd#,
+		#rcomment_content#,
+		#rcomment_regdate#,
+		#member_no#,
+		#rboard_no#
+		)
+	</insert>
+	
+	<delete id="rcommentDelete" parameterClass="rcomment">
+		DELETE FROM RCOMMENT
+		<include refid="where-no-Rcomment"/>
+	</delete>
+	
+</sqlMap>

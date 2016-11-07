@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+	'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+	
+
+<sqlMap>
+	<typeAlias alias="iboard" type="IBoard.IB_VO" />
+	
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="iboardRes" class="iboard">
+		<result property="iboard_no" column="iboard_no" />
+		<result property="iboard_subject" column="iboard_subject" />
+		<result property="iboard_content" column="iboard_content" />
+		<result property="iboard_fileorg" column="iboard_fileorg" />
+		<result property="iboard_filesav" column="iboard_filesav" />
+		<result property="iboard_readhit" column="iboard_readhit" />
+		<result property="iboard_regdate" column="iboard_regdate" />
+		<result property="iboard_passwd" column="iboard_passwd" />
+	</resultMap>
+
+	<!-- 공통으로 사용할 select절 정의 -->
+	<sql id="select-all-Iboard">
+		SELECT * FROM IBOARD
+	</sql>
+	
+	
+	<!-- 공통으로 사용할 where-no-IBoard절 정의 -->
+	<sql id="where-no-IBoard">
+		WHERE iboard_no = #iboard_no#
+	</sql>
+	
+	
+	<!-- select 쿼리문 정의  -->
+	
+	<select id="iboardSelectAll" resultMap="iboardRes" parameterClass="String">
+		<include refid="select-all-Iboard" />
+		ORDER BY iboard_no DESC
+	</select>
+	
+	<select id="iboardSelectOne" resultMap="iboardRes" parameterClass="int">
+		<include refid="select-all-Iboard" />
+		<include refid="where-no-IBoard" />
+	</select>
+	
+
+	
+	<select id="iboardSelectNo" resultMap="iboardRes" parameterClass="int">
+		select ib.iboard_subject from iboard ib, member m where ib.member_no=m.member_no
+	</select>
+	
+	<select id="iboardSelectLastNo" resultClass="iboard" parameterClass="int">
+		SELECT max(iboard_no) as iboard_no FROM iboard
+	</select>
+	
+	
+	<select id="selectSearchS" resultMap="iboardRes" parameterClass="String">
+		<include refid="select-all-Iboard" />
+		WHERE iboard_subject like #searchKeyword#
+		ORDER BY iboard_no DESC
+	</select>
+	
+	<select id="selectSearchC" resultMap="iboardRes" parameterClass="String">
+		<include refid="select-all-Iboard" />
+		WHERE iboard_content like #searchKeyword#
+		ORDER BY iboard_no DESC
+	</select>
+	
+	<!--  현재 글의 비밀번호 가져오기. -->
+	<select id="iboardselectPasswd" resultMap="iboardRes">
+		<include refid="select-all-Iboard"/>
+		<include refid="where-no-IBoard" />
+		AND iboard_passwd = #iboard_passwd#
+	</select>
+	
+	<!-- insert 쿼리문 정의 -->
+	
+	<insert id="iboardInsert" parameterClass="iboard">
+		INSERT INTO IBOARD(IBOARD_NO, IBOARD_SUBJECT, IBOARD_CONTENT, IBOARD_REGDATE, IBOARD_FILEORG, IBOARD_FILESAV, IBOARD_PASSWD)
+		VALUES(IBOARD_NO_SEQ.NEXTVAL, #iboard_subject#, #iboard_content#, #iboard_regdate#, #iboard_fileorg#, #iboard_filesav#, #iboard_passwd#)
+	</insert>
+	
+	
+	<!-- update 쿼리문 정의 -->
+	
+	<update id="iboardUpdate" parameterClass="iboard">
+		UPDATE IBOARD SET IBOARD_SUBJECT=#iboard_subject#, IBOARD_CONTENT=#iboard_content#, IBOARD_PASSWD=#iboard_passwd#
+					<include refid="where-no-IBoard"/>	  
+	</update>				  
+		
+	
+	
+
+	<update id="iboardUpdateFile" parameterClass="iboard">
+		UPDATE IBOARD SET IBOARD_FILEORG=#iboard_fileorg#
+						  ,IBOARD_FILESAV=#iboard_filesav#
+	<include refid="where-no-IBoard"/>
+	</update>
+	 
+	
+	<update id="iboardUpdateReadHit" parameterClass="iboard">
+		UPDATE IBOARD SET IBOARD_READHIT = iboard_readhit + 1
+	<include refid="where-no-IBoard"/>
+	</update>
+	
+	
+	<!-- delete 쿼리문 정의 -->
+
+	<delete id="iboardDelete" parameterClass="iboard">
+		DELETE FROM IBOARD
+		<include refid="where-no-IBoard"/>
+	</delete>
+	
+	
+	
+</sqlMap>
