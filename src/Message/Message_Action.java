@@ -33,6 +33,7 @@ public class Message_Action extends ActionSupport implements SessionAware{
 	private String message_content;
 	private int message_no;
 	private String[] dellist;
+	private String[] messageChk;
 	
 	private String[] readIDList;
 	private String[] message_con;
@@ -150,10 +151,59 @@ public class Message_Action extends ActionSupport implements SessionAware{
 			
 			param.put("message_read", readIDList[i]);
 			
-			sqlMapper.insert("insertSend", param);
+			sqlMapper.insert("insertSendMessage", param);
 		}
 		return SUCCESS;
 		
+	}
+	
+	public String delete() throws Exception{
+		
+		for(int i = 0; i<dellist.length; i++){
+			System.out.println(dellist[i]);
+		}
+		
+		for(int i = 0; i < dellist.length; i++){
+			
+			param.put("message_no", dellist[i]);
+			sqlMapper.update("deleteMessage", param);
+			
+			/*if(state.equals("read")){
+				param.put("message_no", dellist[i]);
+				sqlMapper.update("readDelDate", param);
+			}else if(state.equals("send")){
+				param.put("message_no", dellist[i]);
+				sqlMapper.update("sendDelDate", param);
+			}*/
+		}
+		
+		return SUCCESS;
+		
+	}
+	
+	public String view() throws Exception{
+		
+		message_no = getMessage_no();
+		param.put("message_no", message_no);
+		
+		if(state.equals("read")){
+			sqlMapper.update("messageReadHit", param);
+		}
+		
+		resultClassMsg = (Message_VO)sqlMapper.queryForObject("selectMessageOne", param);
+		
+		return SUCCESS;
+		
+	}
+	
+	public String reWriteForm() throws Exception{
+		
+		message_no = getMessage_no();
+		param.put("message_no", message_no);
+		
+		resultClassMsg=  (Message_VO)sqlMapper.queryForObject("selectMessageOne", param);
+		
+		return SUCCESS;
 	}
 
 	public String getState() {
@@ -188,13 +238,6 @@ public class Message_Action extends ActionSupport implements SessionAware{
 		this.message_no = message_no;
 	}
 
-	public String[] getDellist() {
-		return dellist;
-	}
-
-	public void setDellist(String[] dellist) {
-		this.dellist = dellist;
-	}
 
 	public String[] getReadIDList() {
 		return readIDList;
@@ -315,5 +358,22 @@ public class Message_Action extends ActionSupport implements SessionAware{
 	public void setResultClassMsg(Message_VO resultClassMsg) {
 		this.resultClassMsg = resultClassMsg;
 	}
+
+	public String[] getDellist() {
+		return dellist;
+	}
+
+	public void setDellist(String[] dellist) {
+		this.dellist = dellist;
+	}
+
+	public String[] getMessageChk() {
+		return messageChk;
+	}
+
+	public void setMessageChk(String[] messageChk) {
+		this.messageChk = messageChk;
+	}
+
 
 }

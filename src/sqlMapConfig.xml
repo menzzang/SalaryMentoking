@@ -34,5 +34,6 @@
 	<sqlMap resource="/sql/NoticeSQL.xml" />
 	<sqlMap resource="/sql/IBoardSQL.xml"/>
 	<sqlMap resource="/sql/UserGuideSQL.xml" />
+	<sqlMap resource="/sql/MessageSQL.xml" />
 
 </sqlMapConfig>

@@ -121,8 +121,12 @@
 		<put-attribute name="body" value="/Member/MemberDeleteResult.jsp" />
 	</definition>
    
+   <!-- 메세지 -->
+   <definition name="Message_ListAction" extends="RB_ListAction">
+   		<put-attribute name="body" value="/Message/MessageList.jsp" />
+   </definition>
    
-   
+   <!-- 공지사항 -->
    <definition name="N_ListAction" extends="RB_ListAction">
       <put-attribute name="body" value="/Notice/NoticeList.jsp" />
    </definition>	

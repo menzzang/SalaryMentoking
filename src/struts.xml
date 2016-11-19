@@ -191,7 +191,36 @@
 			<result type="tiles">MP_Apply</result>
 		</action>
 		
+		<!-- ##MESSAGE.XML -->
+		<!-- 메세지 : 쪽지리스트 보기 -->
+		<action name="Message_ListAction" class="Message.Message_Action" method="list">
+			<result type="tiles">Message_ListAction</result>
+		</action>
 		
+		<!-- 메세지 : 쪽지 쓰기 -->
+		<action name="Message_WriteForm" class="Message.Message_Action">
+			<result>/Message/MessageWrite.jsp</result>
+		</action>
+		
+		<action name="Message_WriteAction" class="Message.Message_Action" method="write">
+			<result name="success">/Message/sendMessageComp.jsp</result>
+			<result name="error">/Message/sendIdFindError.jsp</result>
+		</action>
+		
+		<!-- 메세지 : 쪽지 읽기 -->
+		<action name="Message_ViewAction" class="Message.Message_Action" method="view">
+			<result>/Message/MessageView.jsp</result>
+		</action>
+		
+		<!-- 메세지 : 답장 하기 -->
+		<action name="Message_ReWriteForm" class="Message.Message_Action" method="reWriteForm">
+			<result>/Message/MessageReWrite.jsp</result>
+		</action>
+		
+		<!-- 메세지 : 삭제하기 -->
+		<action name="Message_Delete" class="Message.Message_Action" method="delete">
+			<result type="redirect">Message_ListAction.action?state=read</result>
+		</action>
 		
 		<!-- ##RBOARD.XML -->
 		<action name="RB_ListAction" class="RBoard.RB_ListAction" >

@@ -49,7 +49,8 @@
 		<strong>'${ session.member_id }' 님 환영합니다! </strong>
 		&nbsp;&nbsp;|&nbsp;&nbsp;
 		<s:a href="LogoutAction.action">로그아웃</s:a>&nbsp;&nbsp;|&nbsp;&nbsp;
-		<s:a href="MP_Mypage.action">마이페이지</s:a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<s:a href="MP_Mypage.action">마이페이지</s:a>&nbsp;&nbsp;|&nbsp;&nbsp;
+		<s:a href="Message_ListAction.action?state=read">쪽지함</s:a>&nbsp;&nbsp;&nbsp;&nbsp;
 		</td>
 	</tr>
 	<tr>

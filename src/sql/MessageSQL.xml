@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+	'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+
+<sqlMap>
+	
+	<typeAlias alias="message" type="Message.Message_VO" />
+	<typeAlias alias="member" type="Member.Mem_VO" />
+	
+	<resultMap id="messageRes" class="message">
+		<result property="message_no" column="message_no" />
+		<result property="message_send" column="message_send" />
+		<result property="message_read" column="message_read" />
+		<result property="message_senddate" column="message_senddate" />
+		<result property="message_readdate" column="message_readdate" />
+		<result property="message_senddeldate" column="message_senddeldate" />
+		<result property="message_readdeldate" column="message_readdeldate" />
+		<result property="message_content" column="message_content" />
+	</resultMap>
+	
+	<resultMap id="memberRes" class="member" >
+		<result property="member_no" column="MEMBER_NO" />
+		<result property="member_id" column="MEMBER_ID" />
+		<result property="member_passwd" column="MEMBER_PASSWD" />
+		<result property="member_name" column="MEMBER_NAME" />
+		<result property="member_email" column="MEMBER_EMAIL" />
+		<result property="member_phone" column="MEMBER_PHONE" />
+		<result property="member_index" column="MEMBER_INDEX" />
+		<result property="member_zipcode" column="MEMBER_ZIPCODE" />
+		<result property="member_address" column="MEMBER_ADDRESS" />
+		<result property="member_sex" column="MEMBER_SEX"/>
+		<result property="member_birthdate" column="MEMBER_BIRTHDATE"/>
+	</resultMap>
+	
+	<!-- select 쿼리문 -->
+	<select id="selectSendMessageAll" resultMap="messageRes" parameterClass="java.util.Map" >
+		select *
+		from message
+		where message_send = #message_send#
+		and message_senddeldate is null
+		order by message_senddate desc
+	</select>
+	
+	<select id="selectReadMessageAll" resultMap="messageRes" parameterClass="java.util.Map" >
+		select *
+		from message
+		where message_read = #message_read#
+		and message_readdeldate is null
+		order by message_senddate desc
+	</select>
+	
+	<select id="selectMessageOne" resultMap="messageRes" parameterClass="java.util.Map" >
+		select *
+		from message
+		where message_no = #message_no#
+	</select>
+	
+	<select id="searchPassword" resultMap="memberRes" parameterClass="string">
+		SELECT * FROM member where member_id = #member_id#
+	</select>
+	
+	<!-- insert 쿼리문 -->
+	<insert id="insertSendMessage" parameterClass="java.util.Map">
+		insert into message(message_no,
+							message_send,
+							message_read,
+							message_senddate,
+							message_content
+							)
+					values (message_no_seq.nextval,
+							#message_send#,
+							#message_read#,
+							sysdate,
+							#message_content#
+							)
+	</insert> 
+	
+	<!-- update 쿼리문 -->
+	<update id="readDelDate" parameterClass="java.util.Map">
+		update message set message_readdeldate = sysdate
+		WHERE message_no = #message_no#
+	</update>
+	
+	<update id="sendDelDate" parameterClass="java.util.Map">
+		update message set message_senddeldate = sysdate
+		WHERE message_no = #message_no#
+	</update>
+	
+	<update id="messageReadHit" parameterClass="java.util.Map">
+		update message set message_readdate = sysdate
+		WHERE message_no = #message_no#
+	</update>
+	
+	<!-- delete 쿼리문 -->
+	<delete id="deleteMessage" parameterClass="java.util.Map">
+		delete from message
+		where message_no = #message_no#
+	</delete>
+	
+	
+
+</sqlMap>
